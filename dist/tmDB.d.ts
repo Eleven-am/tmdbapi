@@ -1,0 +1,33 @@
+import { FetchType } from "./request";
+import { AiringShows, AiringShowsOptions, AppendToEpisode, AppendToMovie, AppendToPerson, AppendToSeason, AppendToShow, Collection, Company, Discover, DiscoverOptions, Episode, EpisodeOptions, KeywordOptions, KeywordResult, LibraryType, Movie, MovieOptions, NowPlayingMovies, NowPlayingMoviesOptions, Person, PersonOptions, PopularMedia, PopularMediaOptions, Recommendations, RecommendationsOptions, SearchOptions, SearchResult, Season, SeasonOptions, Similar, SimilarOptions, TopRatedMedia, TopRatedMediaOptions, TrendingMedia, TrendingMediaOptions, TVShow, TVShowOptions, UpcomingMovies, UpcomingMoviesOptions } from "./tmDBTypes";
+import { TMDBResponse } from "./response";
+export declare class TmDBApi {
+    private readonly _apiKey;
+    private readonly _baseUrl;
+    private readonly _fetch;
+    constructor(apiKey: string, fetch?: FetchType, baseUrl?: string);
+    getCollection(id?: number, language?: string): Promise<TMDBResponse<Collection>>;
+    getMovie<Append extends AppendToMovie>(id: number, options?: MovieOptions<Append>): Promise<TMDBResponse<Movie<Append>>>;
+    getShow<Append extends AppendToShow>(id: number, options?: TVShowOptions<Append>): Promise<TMDBResponse<TVShow<Append>>>;
+    getSeason<Append extends AppendToSeason>(id: number, seasonNumber: number, options?: SeasonOptions<Append>): Promise<TMDBResponse<Season<Append>>>;
+    getEpisode<Append extends AppendToEpisode>(id: number, seasonNumber: number, episodeNumber: number, options?: EpisodeOptions<Append>): Promise<TMDBResponse<Episode<Append>>>;
+    getPerson<Append extends AppendToPerson>(id: number, options?: PersonOptions<Append>): Promise<TMDBResponse<Person<Append>>>;
+    getCompany(id: number, language?: string): Promise<TMDBResponse<Company>>;
+    getNetwork(id: number, language?: string): Promise<TMDBResponse<Company>>;
+    searchTmDB<Library extends LibraryType>(query: string, options?: SearchOptions<Library>): Promise<TMDBResponse<SearchResult<Library>>>;
+    getUpcomingMovies(options?: UpcomingMoviesOptions): Promise<TMDBResponse<UpcomingMovies>>;
+    getNowPlayingMovies(options?: NowPlayingMoviesOptions): Promise<TMDBResponse<NowPlayingMovies>>;
+    getPopularMedia<Library extends LibraryType>(options?: PopularMediaOptions<Library>): Promise<TMDBResponse<PopularMedia<Library>>>;
+    getTopRatedMedia<Library extends LibraryType>(options?: TopRatedMediaOptions<Library>): Promise<TMDBResponse<TopRatedMedia<Library>>>;
+    getTrendingMedia<Library extends LibraryType>(options?: TrendingMediaOptions<Library>): Promise<TMDBResponse<TrendingMedia<Library>>>;
+    getAiringShows(options?: AiringShowsOptions): Promise<TMDBResponse<AiringShows>>;
+    getByKeyword<Library extends LibraryType>(id: number, options?: KeywordOptions<Library>): Promise<TMDBResponse<KeywordResult<Library>>>;
+    getRecommendations<Library extends LibraryType>(id: number, options?: RecommendationsOptions<Library>): Promise<TMDBResponse<Recommendations<Library>>>;
+    getSimilar<Library extends LibraryType>(id: number, options?: SimilarOptions<Library>): Promise<TMDBResponse<Similar<Library>>>;
+    discoverMedia<Library extends LibraryType>(options?: DiscoverOptions<Library>): Promise<TMDBResponse<Discover<Library>>>;
+    private _getAppendToResponse;
+    private _getSeasonsAppendToShowResponse;
+    private _getProvider;
+    private _getDateObject;
+    private _getSearchType;
+}

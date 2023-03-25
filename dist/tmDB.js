@@ -1,0 +1,482 @@
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.TmDBApi = void 0;
+const request_1 = require("./request");
+const response_1 = require("./response");
+const helpers_1 = require("./helpers");
+class TmDBApi {
+    constructor(apiKey, fetch, baseUrl = 'https://api.themoviedb.org/3') {
+        this._apiKey = apiKey;
+        this._baseUrl = baseUrl;
+        this._fetch = fetch;
+    }
+    getCollection(id, language = 'en-US') {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!id) {
+                return {
+                    error: 'Collection id is required',
+                    code: 400
+                };
+            }
+            const params = {
+                language,
+                api_key: this._apiKey,
+                append_to_response: 'images'
+            };
+            const request = {
+                method: 'GET',
+                address: `${this._baseUrl}/collection/${id}`,
+                query: params,
+                fetch: this._fetch
+            };
+            const data = yield (0, request_1.makeRequest)(request);
+            return this._getDateObject(data);
+        });
+    }
+    getMovie(id, options) {
+        var _a, _b, _c, _d;
+        return __awaiter(this, void 0, void 0, function* () {
+            const params = {
+                api_key: this._apiKey,
+                language: (_a = options === null || options === void 0 ? void 0 : options.language) !== null && _a !== void 0 ? _a : 'en-US',
+                append_to_response: this._getAppendToResponse(options === null || options === void 0 ? void 0 : options.append_to_response)
+            };
+            const request = {
+                method: 'GET',
+                address: `${this._baseUrl}/movie/${id}`,
+                query: params,
+                fetch: this._fetch
+            };
+            const data = yield (0, request_1.makeRequest)(request);
+            const movie = this._getProvider(data, options === null || options === void 0 ? void 0 : options.append_to_response);
+            if ((0, response_1.hasError)(movie) || !((_b = options === null || options === void 0 ? void 0 : options.append_to_response) === null || _b === void 0 ? void 0 : _b.collection)) {
+                return movie;
+            }
+            const collection = yield this.getCollection((_d = (_c = movie.data) === null || _c === void 0 ? void 0 : _c.belongs_to_collection) === null || _d === void 0 ? void 0 : _d.id);
+            const newMovie = Object.assign(Object.assign({}, movie.data), { collection: (0, response_1.unwrapOrNull)(collection) });
+            return {
+                data: newMovie,
+            };
+        });
+    }
+    getShow(id, options) {
+        var _a, _b, _c, _d, _e, _f, _g, _h;
+        return __awaiter(this, void 0, void 0, function* () {
+            const params = {
+                api_key: this._apiKey,
+                language: (_a = options === null || options === void 0 ? void 0 : options.language) !== null && _a !== void 0 ? _a : 'en-US',
+                append_to_response: this._getAppendToResponse(options === null || options === void 0 ? void 0 : options.append_to_response)
+            };
+            const request = {
+                method: 'GET',
+                address: `${this._baseUrl}/tv/${id}`,
+                query: params,
+                fetch: this._fetch
+            };
+            const data = yield (0, request_1.makeRequest)(request);
+            const show = this._getProvider(data, options === null || options === void 0 ? void 0 : options.append_to_response);
+            if ((0, response_1.hasError)(show) || !((_b = options === null || options === void 0 ? void 0 : options.append_to_response) === null || _b === void 0 ? void 0 : _b.appendSeasons)) {
+                return show;
+            }
+            if (((_c = options === null || options === void 0 ? void 0 : options.append_to_response) === null || _c === void 0 ? void 0 : _c.appendSeasons) === 'all') {
+                options.append_to_response.appendSeasons = (_e = (_d = show.data) === null || _d === void 0 ? void 0 : _d.seasons) === null || _e === void 0 ? void 0 : _e.map(season => season.season_number);
+                return this.getShow(id, options);
+            }
+            const newShow = Object.assign({}, show.data);
+            const appended = Array.isArray((_f = options === null || options === void 0 ? void 0 : options.append_to_response) === null || _f === void 0 ? void 0 : _f.appendSeasons) ? (_g = options === null || options === void 0 ? void 0 : options.append_to_response) === null || _g === void 0 ? void 0 : _g.appendSeasons : [(_h = options === null || options === void 0 ? void 0 : options.append_to_response) === null || _h === void 0 ? void 0 : _h.appendSeasons];
+            newShow.appendSeasons = appended.map(season => {
+                const temp = newShow[`season/${season}`];
+                delete newShow[`season/${season}`];
+                if (temp) {
+                    return temp;
+                }
+            }).filter(season => season);
+            return {
+                data: newShow
+            };
+        });
+    }
+    getSeason(id, seasonNumber, options) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            const params = {
+                api_key: this._apiKey,
+                language: (_a = options === null || options === void 0 ? void 0 : options.language) !== null && _a !== void 0 ? _a : 'en-US',
+                append_to_response: this._getAppendToResponse(options === null || options === void 0 ? void 0 : options.append_to_response)
+            };
+            const request = {
+                method: 'GET',
+                address: `${this._baseUrl}/tv/${id}/season/${seasonNumber}`,
+                query: params,
+                fetch: this._fetch
+            };
+            const data = yield (0, request_1.makeRequest)(request);
+            return this._getProvider(data, options === null || options === void 0 ? void 0 : options.append_to_response);
+        });
+    }
+    getEpisode(id, seasonNumber, episodeNumber, options) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            const params = {
+                api_key: this._apiKey,
+                language: (_a = options === null || options === void 0 ? void 0 : options.language) !== null && _a !== void 0 ? _a : 'en-US',
+                append_to_response: this._getAppendToResponse(options === null || options === void 0 ? void 0 : options.append_to_response)
+            };
+            const request = {
+                method: 'GET',
+                address: `${this._baseUrl}/tv/${id}/season/${seasonNumber}/episode/${episodeNumber}`,
+                query: params,
+                fetch: this._fetch
+            };
+            const data = yield (0, request_1.makeRequest)(request);
+            return this._getProvider(data, options === null || options === void 0 ? void 0 : options.append_to_response);
+        });
+    }
+    getPerson(id, options) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            const params = {
+                api_key: this._apiKey,
+                language: (_a = options === null || options === void 0 ? void 0 : options.language) !== null && _a !== void 0 ? _a : 'en-US',
+                append_to_response: this._getAppendToResponse(options === null || options === void 0 ? void 0 : options.append_to_response)
+            };
+            const request = {
+                method: 'GET',
+                address: `${this._baseUrl}/person/${id}`,
+                query: params,
+                fetch: this._fetch
+            };
+            const data = yield (0, request_1.makeRequest)(request);
+            return this._getProvider(data, options === null || options === void 0 ? void 0 : options.append_to_response);
+        });
+    }
+    getCompany(id, language) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const params = {
+                api_key: this._apiKey,
+                language: language !== null && language !== void 0 ? language : 'en-US'
+            };
+            const request = {
+                method: 'GET',
+                address: `${this._baseUrl}/company/${id}`,
+                query: params,
+                fetch: this._fetch
+            };
+            const data = yield (0, request_1.makeRequest)(request);
+            return this._getDateObject(data);
+        });
+    }
+    getNetwork(id, language) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const params = {
+                api_key: this._apiKey,
+                language: language !== null && language !== void 0 ? language : 'en-US'
+            };
+            const request = {
+                method: 'GET',
+                address: `${this._baseUrl}/network/${id}`,
+                query: params,
+                fetch: this._fetch
+            };
+            const data = yield (0, request_1.makeRequest)(request);
+            return this._getDateObject(data);
+        });
+    }
+    searchTmDB(query, options) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            const params = {
+                api_key: this._apiKey,
+                language: (_a = options === null || options === void 0 ? void 0 : options.language) !== null && _a !== void 0 ? _a : 'en-US',
+                query: query,
+                page: options === null || options === void 0 ? void 0 : options.page,
+                include_adult: options === null || options === void 0 ? void 0 : options.include_adult,
+                region: options === null || options === void 0 ? void 0 : options.region,
+                year: options === null || options === void 0 ? void 0 : options.year,
+                primary_release_year: options === null || options === void 0 ? void 0 : options.primary_release_year,
+                first_air_date_year: options === null || options === void 0 ? void 0 : options.first_air_date_year
+            };
+            const request = {
+                method: 'GET',
+                address: `${this._baseUrl}/search/${this._getSearchType(options === null || options === void 0 ? void 0 : options.library_type)}`,
+                query: params,
+                fetch: this._fetch
+            };
+            const data = yield (0, request_1.makeRequest)(request);
+            return this._getDateObject(data);
+        });
+    }
+    getUpcomingMovies(options) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            const params = {
+                api_key: this._apiKey,
+                language: (_a = options === null || options === void 0 ? void 0 : options.language) !== null && _a !== void 0 ? _a : 'en-US',
+                page: options === null || options === void 0 ? void 0 : options.page,
+                region: options === null || options === void 0 ? void 0 : options.region
+            };
+            const request = {
+                method: 'GET',
+                address: `${this._baseUrl}/movie/upcoming`,
+                query: params,
+                fetch: this._fetch
+            };
+            const data = yield (0, request_1.makeRequest)(request);
+            return this._getDateObject(data);
+        });
+    }
+    getNowPlayingMovies(options) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            const params = {
+                api_key: this._apiKey,
+                language: (_a = options === null || options === void 0 ? void 0 : options.language) !== null && _a !== void 0 ? _a : 'en-US',
+                page: options === null || options === void 0 ? void 0 : options.page,
+                region: options === null || options === void 0 ? void 0 : options.region
+            };
+            const request = {
+                method: 'GET',
+                address: `${this._baseUrl}/movie/now_playing`,
+                query: params,
+                fetch: this._fetch
+            };
+            const data = yield (0, request_1.makeRequest)(request);
+            return this._getDateObject(data);
+        });
+    }
+    getPopularMedia(options) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            const params = {
+                api_key: this._apiKey,
+                language: (_a = options === null || options === void 0 ? void 0 : options.language) !== null && _a !== void 0 ? _a : 'en-US',
+                page: options === null || options === void 0 ? void 0 : options.page,
+                region: options === null || options === void 0 ? void 0 : options.region
+            };
+            const request = {
+                method: 'GET',
+                address: `${this._baseUrl}/${this._getSearchType(options === null || options === void 0 ? void 0 : options.library_type)}/popular`,
+                query: params,
+                fetch: this._fetch
+            };
+            const data = yield (0, request_1.makeRequest)(request);
+            return this._getDateObject(data);
+        });
+    }
+    getTopRatedMedia(options) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            const params = {
+                api_key: this._apiKey,
+                language: (_a = options === null || options === void 0 ? void 0 : options.language) !== null && _a !== void 0 ? _a : 'en-US',
+                page: options === null || options === void 0 ? void 0 : options.page,
+                region: options === null || options === void 0 ? void 0 : options.region
+            };
+            const request = {
+                method: 'GET',
+                address: `${this._baseUrl}/${this._getSearchType(options === null || options === void 0 ? void 0 : options.library_type)}/top_rated`,
+                query: params,
+                fetch: this._fetch
+            };
+            const data = yield (0, request_1.makeRequest)(request);
+            return this._getDateObject(data);
+        });
+    }
+    getTrendingMedia(options) {
+        var _a, _b;
+        return __awaiter(this, void 0, void 0, function* () {
+            const params = {
+                api_key: this._apiKey,
+                language: (_a = options === null || options === void 0 ? void 0 : options.language) !== null && _a !== void 0 ? _a : 'en-US',
+                page: options === null || options === void 0 ? void 0 : options.page,
+                region: options === null || options === void 0 ? void 0 : options.region,
+                time_window: options === null || options === void 0 ? void 0 : options.time_window
+            };
+            const request = {
+                method: 'GET',
+                address: `${this._baseUrl}/trending/${this._getSearchType(options === null || options === void 0 ? void 0 : options.library_type)}/${(_b = options === null || options === void 0 ? void 0 : options.time_window) !== null && _b !== void 0 ? _b : 'day'}`,
+                query: params,
+                fetch: this._fetch
+            };
+            const data = yield (0, request_1.makeRequest)(request);
+            return this._getDateObject(data);
+        });
+    }
+    getAiringShows(options) {
+        var _a, _b;
+        return __awaiter(this, void 0, void 0, function* () {
+            const params = {
+                api_key: this._apiKey,
+                language: (_a = options === null || options === void 0 ? void 0 : options.language) !== null && _a !== void 0 ? _a : 'en-US',
+                page: options === null || options === void 0 ? void 0 : options.page,
+                timezone: options === null || options === void 0 ? void 0 : options.timezone
+            };
+            const request = {
+                method: 'GET',
+                address: `${this._baseUrl}/tv/${(_b = options === null || options === void 0 ? void 0 : options.time_window) !== null && _b !== void 0 ? _b : 'airing_today'}`,
+                query: params,
+                fetch: this._fetch
+            };
+            const data = yield (0, request_1.makeRequest)(request);
+            return this._getDateObject(data);
+        });
+    }
+    getByKeyword(id, options) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            const params = {
+                api_key: this._apiKey,
+                language: (_a = options === null || options === void 0 ? void 0 : options.language) !== null && _a !== void 0 ? _a : 'en-US',
+                page: options === null || options === void 0 ? void 0 : options.page
+            };
+            const request = {
+                method: 'GET',
+                address: `${this._baseUrl}/keyword/${id}/${this._getSearchType(options === null || options === void 0 ? void 0 : options.library_type)}`,
+                query: params,
+                fetch: this._fetch
+            };
+            const data = yield (0, request_1.makeRequest)(request);
+            return this._getDateObject(data);
+        });
+    }
+    getRecommendations(id, options) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            const params = {
+                api_key: this._apiKey,
+                language: (_a = options === null || options === void 0 ? void 0 : options.language) !== null && _a !== void 0 ? _a : 'en-US',
+                page: options === null || options === void 0 ? void 0 : options.page
+            };
+            const request = {
+                method: 'GET',
+                address: `${this._baseUrl}/${this._getSearchType(options === null || options === void 0 ? void 0 : options.library_type)}/${id}/recommendations`,
+                query: params,
+                fetch: this._fetch
+            };
+            const data = yield (0, request_1.makeRequest)(request);
+            return this._getDateObject(data);
+        });
+    }
+    getSimilar(id, options) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            const params = {
+                api_key: this._apiKey,
+                language: (_a = options === null || options === void 0 ? void 0 : options.language) !== null && _a !== void 0 ? _a : 'en-US',
+                page: options === null || options === void 0 ? void 0 : options.page
+            };
+            const request = {
+                method: 'GET',
+                address: `${this._baseUrl}/${this._getSearchType(options === null || options === void 0 ? void 0 : options.library_type)}/${id}/similar`,
+                query: params,
+                fetch: this._fetch
+            };
+            const data = yield (0, request_1.makeRequest)(request);
+            return this._getDateObject(data);
+        });
+    }
+    discoverMedia(options) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            const params = Object.assign(Object.assign({}, options === null || options === void 0 ? void 0 : options.params), { api_key: this._apiKey, language: (_a = options === null || options === void 0 ? void 0 : options.language) !== null && _a !== void 0 ? _a : 'en-US', page: options === null || options === void 0 ? void 0 : options.page });
+            const request = {
+                method: 'GET',
+                address: `${this._baseUrl}/discover/${this._getSearchType(options === null || options === void 0 ? void 0 : options.library_type)}`,
+                query: params,
+                fetch: this._fetch
+            };
+            const data = yield (0, request_1.makeRequest)(request);
+            return this._getDateObject(data);
+        });
+    }
+    _getAppendToResponse(options) {
+        let appendToResponse = [];
+        if (options === null || options === void 0 ? void 0 : options.changes)
+            appendToResponse.push('changes');
+        if (options === null || options === void 0 ? void 0 : options.images)
+            appendToResponse.push('images');
+        if (options && 'release_dates' in options)
+            appendToResponse.push('release_dates');
+        if (options && 'keywords' in options)
+            appendToResponse.push('keywords');
+        if (options && 'videos' in options)
+            appendToResponse.push('videos');
+        if (options && 'credits' in options)
+            appendToResponse.push('credits');
+        if (options && 'recommendations' in options)
+            appendToResponse.push('recommendations');
+        if (options && 'similar' in options)
+            appendToResponse.push('similar');
+        if (options === null || options === void 0 ? void 0 : options.external_ids)
+            appendToResponse.push('external_ids');
+        if (options && 'reviews' in options)
+            appendToResponse.push('reviews');
+        if (options && 'translations' in options)
+            appendToResponse.push('translations');
+        if (options && 'lists' in options)
+            appendToResponse.push('lists');
+        if (options && 'appendSeasons' in options)
+            appendToResponse.push(...this._getSeasonsAppendToShowResponse(options.appendSeasons));
+        if (options && 'watch_providers' in options)
+            appendToResponse.push('watch/providers');
+        if (options && 'movie_credits' in options)
+            appendToResponse.push('movie_credits');
+        if (options && 'tv_credits' in options)
+            appendToResponse.push('tv_credits');
+        if (options && 'combined_credits' in options)
+            appendToResponse.push('combined_credits');
+        if (options && 'tagged_images' in options)
+            appendToResponse.push('tagged_images');
+        if (appendToResponse.length === 0)
+            return undefined;
+        return appendToResponse;
+    }
+    _getSeasonsAppendToShowResponse(options) {
+        if (!options || options === 'all')
+            return [];
+        return Array.isArray(options) ? options.map(o => `season/${o}`) : [`season/${options}`];
+    }
+    _getProvider(data, options) {
+        if ((0, response_1.hasError)(data) || !options || !('watch_providers' in options)) {
+            return data;
+        }
+        let newResponse = Object.assign({}, data.data);
+        newResponse = this._getDateObject(newResponse);
+        const watchProviders = newResponse['watch/providers'];
+        delete newResponse['watch/providers'];
+        if (watchProviders) {
+            newResponse.watch_providers = watchProviders;
+        }
+        return {
+            data: newResponse
+        };
+    }
+    _getDateObject(data) {
+        if ((0, response_1.hasError)(data)) {
+            return data;
+        }
+        return (0, helpers_1.createDates)(data);
+    }
+    _getSearchType(type) {
+        switch (type) {
+            case 'MOVIE':
+                return 'movie';
+            case 'SHOW':
+                return 'tv';
+            case 'PERSON':
+                return 'person';
+            default:
+                return 'multi';
+        }
+    }
+}
+exports.TmDBApi = TmDBApi;
