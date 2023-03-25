@@ -20,7 +20,7 @@
   "license": "GPL-3.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Eleven-am/pondSocket.git"
+    "url": "git+https://github.com/Eleven-am/tmdbapi.git"
   },
   "devDependencies": {
     "typescript": "^5.0.2"
