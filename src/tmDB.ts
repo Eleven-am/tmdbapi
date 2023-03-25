@@ -35,12 +35,23 @@ export class TmDBApi {
     private readonly _baseUrl: string;
     private readonly _fetch: FetchType | undefined;
 
+    /**
+     * Creates an instance of TmDBApi.
+     * @param apiKey - The API key for the TMDb API
+     * @param fetch - The fetch function to use for requests (optional)
+     * @param baseUrl - The base URL for the TMDb API (optional)
+     */
     constructor(apiKey: string, fetch?: FetchType, baseUrl: string = 'https://api.themoviedb.org/3') {
         this._apiKey = apiKey;
         this._baseUrl = baseUrl;
         this._fetch = fetch;
     }
 
+    /**
+     * Get a collection by id.
+     * @param id - The collection id
+     * @param language - The language to use for the request (optional)
+     */
     public async getCollection(id?: number, language: string = 'en-US'): Promise<TMDBResponse<Collection>> {
         if (!id) {
             return {
@@ -66,6 +77,11 @@ export class TmDBApi {
         return this._getDateObject(data);
     }
 
+    /**
+     * Get a Movie by id.
+     * @param id - The movie id
+     * @param options - The options to use for the request includes the append_to_response and language (optional)
+     */
     public async getMovie<Append extends AppendToMovie>(id: number, options?: MovieOptions<Append>): Promise<TMDBResponse<Movie<Append>>> {
         const params = {
             api_key: this._apiKey,
@@ -97,6 +113,11 @@ export class TmDBApi {
         }
     }
 
+    /**
+     * Get a TV Show by id.
+     * @param id - The show id
+     * @param options - The options to use for the request includes the append_to_response and language (optional)
+     */
     public async getShow<Append extends AppendToShow>(id: number, options?: TVShowOptions<Append>): Promise<TMDBResponse<TVShow<Append>>> {
         const params = {
             api_key: this._apiKey,
@@ -138,6 +159,12 @@ export class TmDBApi {
         }
     }
 
+    /**
+     * Get a Season by Show id and Season number.
+     * @param id - The show id
+     * @param seasonNumber - The season number
+     * @param options - The options to use for the request includes the append_to_response and language (optional)
+     */
     public async getSeason<Append extends AppendToSeason>(id: number, seasonNumber: number, options?: SeasonOptions<Append>): Promise<TMDBResponse<Season<Append>>> {
         const params = {
             api_key: this._apiKey,
@@ -156,6 +183,13 @@ export class TmDBApi {
         return this._getProvider(data, options?.append_to_response);
     }
 
+    /**
+     * Get an Episode by Show id, Season number and Episode number.
+     * @param id - The show id
+     * @param seasonNumber - The season number
+     * @param episodeNumber - The episode number
+     * @param options - The options to use for the request includes the append_to_response and language (optional)
+     */
     public async getEpisode<Append extends AppendToEpisode>(id: number, seasonNumber: number, episodeNumber: number, options?: EpisodeOptions<Append>): Promise<TMDBResponse<Episode<Append>>> {
         const params = {
             api_key: this._apiKey,
@@ -174,6 +208,11 @@ export class TmDBApi {
         return this._getProvider(data, options?.append_to_response);
     }
 
+    /**
+     * Get a Person by id.
+     * @param id - The person id
+     * @param options - The options to use for the request includes the append_to_response and language (optional)
+     */
     public async getPerson<Append extends AppendToPerson>(id: number, options?: PersonOptions<Append>): Promise<TMDBResponse<Person<Append>>> {
         const params = {
             api_key: this._apiKey,
@@ -192,6 +231,11 @@ export class TmDBApi {
         return this._getProvider(data, options?.append_to_response);
     }
 
+    /**
+     * Get a Company by id.
+     * @param id - The company id
+     * @param language - The language to use for the request (optional)
+     */
     public async getCompany(id: number, language?: string): Promise<TMDBResponse<Company>> {
         const params = {
             api_key: this._apiKey,
@@ -209,6 +253,11 @@ export class TmDBApi {
         return this._getDateObject(data);
     }
 
+    /**
+     * Get a Network by id.
+     * @param id - The network id
+     * @param language - The language to use for the request (optional)
+     */
     public async getNetwork(id: number, language?: string): Promise<TMDBResponse<Company>> {
         const params = {
             api_key: this._apiKey,
@@ -226,6 +275,11 @@ export class TmDBApi {
         return this._getDateObject(data);
     }
 
+    /**
+     * Search for a Movie, TV Show or Person.
+     * @param query - The query to search for
+     * @param options - The options to use for the request includes the library_type, language, page, include_adult, region, year, primary_release_year and first_air_date_year (optional)
+     */
     public async searchTmDB<Library extends LibraryType>(query: string, options?: SearchOptions<Library>): Promise<TMDBResponse<SearchResult<Library>>> {
         const params = {
             api_key: this._apiKey,
@@ -250,6 +304,10 @@ export class TmDBApi {
         return this._getDateObject(data);
     }
 
+    /**
+     * Get the Upcoming Movies.
+     * @param options - The options to use for the request includes the language, page and region (optional)
+     */
     public async getUpcomingMovies(options?: UpcomingMoviesOptions): Promise<TMDBResponse<UpcomingMovies>> {
         const params = {
             api_key: this._apiKey,
@@ -269,6 +327,10 @@ export class TmDBApi {
         return this._getDateObject(data);
     }
 
+    /**
+     * Get the Now Playing Movies.
+     * @param options - The options to use for the request includes the language, page and region (optional)
+     */
     public async getNowPlayingMovies(options?: NowPlayingMoviesOptions): Promise<TMDBResponse<NowPlayingMovies>> {
         const params = {
             api_key: this._apiKey,
@@ -288,6 +350,10 @@ export class TmDBApi {
         return this._getDateObject(data);
     }
 
+    /**
+     * Get the Popular Media.
+     * @param options - The options to use for the request includes the library_type, language, page and region (optional)
+     */
     public async getPopularMedia<Library extends LibraryType>(options?: PopularMediaOptions<Library>): Promise<TMDBResponse<PopularMedia<Library>>> {
         const params = {
             api_key: this._apiKey,
@@ -307,6 +373,10 @@ export class TmDBApi {
         return this._getDateObject(data);
     }
 
+    /**
+     * Get the Top Rated Media.
+     * @param options - The options to use for the request includes the library_type, language, page and region (optional)
+     */
     public async getTopRatedMedia<Library extends LibraryType>(options?: TopRatedMediaOptions<Library>): Promise<TMDBResponse<TopRatedMedia<Library>>> {
         const params = {
             api_key: this._apiKey,
@@ -326,6 +396,10 @@ export class TmDBApi {
         return this._getDateObject(data);
     }
 
+    /**
+     * Get the Trending Media.
+     * @param options - The options to use for the request includes the library_type, language, page, region and time_window (optional)
+     */
     public async getTrendingMedia<Library extends LibraryType>(options?: TrendingMediaOptions<Library>): Promise<TMDBResponse<TrendingMedia<Library>>> {
         const params = {
             api_key: this._apiKey,
@@ -346,6 +420,10 @@ export class TmDBApi {
         return this._getDateObject(data);
     }
 
+    /**
+     * Get the Airing Shows.
+     * @param options - The options to use for the request includes the language, page, timezone and time_window (optional)
+     */
     public async getAiringShows(options?: AiringShowsOptions): Promise<TMDBResponse<AiringShows>> {
         const params = {
             api_key: this._apiKey,
@@ -365,6 +443,11 @@ export class TmDBApi {
         return this._getDateObject(data);
     }
 
+    /**
+     * Get the Media by keyword.
+     * @param id - The keyword id
+     * @param options - The options to use for the request includes the library_type, language and page (optional)
+     */
     public async getByKeyword<Library extends LibraryType>(id: number, options?: KeywordOptions<Library>): Promise<TMDBResponse<KeywordResult<Library>>> {
         const params = {
             api_key: this._apiKey,
@@ -383,6 +466,11 @@ export class TmDBApi {
         return this._getDateObject(data);
     }
 
+    /**
+     * Get the Recommendations for a media item.
+     * @param id - The media id
+     * @param options - The options to use for the request includes the language and page (optional)
+     */
     public async getRecommendations<Library extends LibraryType>(id: number, options?: RecommendationsOptions<Library>): Promise<TMDBResponse<Recommendations<Library>>> {
         const params = {
             api_key: this._apiKey,
@@ -401,6 +489,11 @@ export class TmDBApi {
         return this._getDateObject(data);
     }
 
+    /**
+     * Get the Similar media items.
+     * @param id - The media id
+     * @param options - The options to use for the request includes the language and page (optional)
+     */
     public async getSimilar<Library extends LibraryType>(id: number, options?: SimilarOptions<Library>): Promise<TMDBResponse<Similar<Library>>> {
         const params = {
             api_key: this._apiKey,
@@ -419,6 +512,10 @@ export class TmDBApi {
         return this._getDateObject(data);
     }
 
+    /**
+     * Discover Media.
+     * @param options - The options to use for the request includes the library_type, language, page, region, sort_by, certification_country, certification, certification_lte, certification_gte, include_adult, include_video, primary_release_year, primary_release_date_gte, primary_release_date_lte, release_date_gte, release_date_lte, with_release_type, year, vote_count_gte, vote_count_lte, vote_average_gte, vote_average_lte, with_cast, with_crew, with_people, with_companies, with_genres, without_genres
+     */
     public async discoverMedia<Library extends LibraryType>(options?: DiscoverOptions<Library>): Promise<TMDBResponse<Discover<Library>>> {
         const params = {
             ...options?.params,

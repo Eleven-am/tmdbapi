@@ -14,11 +14,22 @@ const request_1 = require("./request");
 const response_1 = require("./response");
 const helpers_1 = require("./helpers");
 class TmDBApi {
+    /**
+     * Creates an instance of TmDBApi.
+     * @param apiKey - The API key for the TMDb API
+     * @param fetch - The fetch function to use for requests (optional)
+     * @param baseUrl - The base URL for the TMDb API (optional)
+     */
     constructor(apiKey, fetch, baseUrl = 'https://api.themoviedb.org/3') {
         this._apiKey = apiKey;
         this._baseUrl = baseUrl;
         this._fetch = fetch;
     }
+    /**
+     * Get a collection by id.
+     * @param id - The collection id
+     * @param language - The language to use for the request (optional)
+     */
     getCollection(id, language = 'en-US') {
         return __awaiter(this, void 0, void 0, function* () {
             if (!id) {
@@ -42,6 +53,11 @@ class TmDBApi {
             return this._getDateObject(data);
         });
     }
+    /**
+     * Get a Movie by id.
+     * @param id - The movie id
+     * @param options - The options to use for the request includes the append_to_response and language (optional)
+     */
     getMovie(id, options) {
         var _a, _b, _c, _d;
         return __awaiter(this, void 0, void 0, function* () {
@@ -68,6 +84,11 @@ class TmDBApi {
             };
         });
     }
+    /**
+     * Get a TV Show by id.
+     * @param id - The show id
+     * @param options - The options to use for the request includes the append_to_response and language (optional)
+     */
     getShow(id, options) {
         var _a, _b, _c, _d, _e, _f, _g, _h;
         return __awaiter(this, void 0, void 0, function* () {
@@ -105,6 +126,12 @@ class TmDBApi {
             };
         });
     }
+    /**
+     * Get a Season by Show id and Season number.
+     * @param id - The show id
+     * @param seasonNumber - The season number
+     * @param options - The options to use for the request includes the append_to_response and language (optional)
+     */
     getSeason(id, seasonNumber, options) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
@@ -123,6 +150,13 @@ class TmDBApi {
             return this._getProvider(data, options === null || options === void 0 ? void 0 : options.append_to_response);
         });
     }
+    /**
+     * Get an Episode by Show id, Season number and Episode number.
+     * @param id - The show id
+     * @param seasonNumber - The season number
+     * @param episodeNumber - The episode number
+     * @param options - The options to use for the request includes the append_to_response and language (optional)
+     */
     getEpisode(id, seasonNumber, episodeNumber, options) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
@@ -141,6 +175,11 @@ class TmDBApi {
             return this._getProvider(data, options === null || options === void 0 ? void 0 : options.append_to_response);
         });
     }
+    /**
+     * Get a Person by id.
+     * @param id - The person id
+     * @param options - The options to use for the request includes the append_to_response and language (optional)
+     */
     getPerson(id, options) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
@@ -159,6 +198,11 @@ class TmDBApi {
             return this._getProvider(data, options === null || options === void 0 ? void 0 : options.append_to_response);
         });
     }
+    /**
+     * Get a Company by id.
+     * @param id - The company id
+     * @param language - The language to use for the request (optional)
+     */
     getCompany(id, language) {
         return __awaiter(this, void 0, void 0, function* () {
             const params = {
@@ -175,6 +219,11 @@ class TmDBApi {
             return this._getDateObject(data);
         });
     }
+    /**
+     * Get a Network by id.
+     * @param id - The network id
+     * @param language - The language to use for the request (optional)
+     */
     getNetwork(id, language) {
         return __awaiter(this, void 0, void 0, function* () {
             const params = {
@@ -191,6 +240,11 @@ class TmDBApi {
             return this._getDateObject(data);
         });
     }
+    /**
+     * Search for a Movie, TV Show or Person.
+     * @param query - The query to search for
+     * @param options - The options to use for the request includes the library_type, language, page, include_adult, region, year, primary_release_year and first_air_date_year (optional)
+     */
     searchTmDB(query, options) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
@@ -215,6 +269,10 @@ class TmDBApi {
             return this._getDateObject(data);
         });
     }
+    /**
+     * Get the Upcoming Movies.
+     * @param options - The options to use for the request includes the language, page and region (optional)
+     */
     getUpcomingMovies(options) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
@@ -234,6 +292,10 @@ class TmDBApi {
             return this._getDateObject(data);
         });
     }
+    /**
+     * Get the Now Playing Movies.
+     * @param options - The options to use for the request includes the language, page and region (optional)
+     */
     getNowPlayingMovies(options) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
@@ -253,6 +315,10 @@ class TmDBApi {
             return this._getDateObject(data);
         });
     }
+    /**
+     * Get the Popular Media.
+     * @param options - The options to use for the request includes the library_type, language, page and region (optional)
+     */
     getPopularMedia(options) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
@@ -272,6 +338,10 @@ class TmDBApi {
             return this._getDateObject(data);
         });
     }
+    /**
+     * Get the Top Rated Media.
+     * @param options - The options to use for the request includes the library_type, language, page and region (optional)
+     */
     getTopRatedMedia(options) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
@@ -291,6 +361,10 @@ class TmDBApi {
             return this._getDateObject(data);
         });
     }
+    /**
+     * Get the Trending Media.
+     * @param options - The options to use for the request includes the library_type, language, page, region and time_window (optional)
+     */
     getTrendingMedia(options) {
         var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
@@ -311,6 +385,10 @@ class TmDBApi {
             return this._getDateObject(data);
         });
     }
+    /**
+     * Get the Airing Shows.
+     * @param options - The options to use for the request includes the language, page, timezone and time_window (optional)
+     */
     getAiringShows(options) {
         var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
@@ -330,6 +408,11 @@ class TmDBApi {
             return this._getDateObject(data);
         });
     }
+    /**
+     * Get the Media by keyword.
+     * @param id - The keyword id
+     * @param options - The options to use for the request includes the library_type, language and page (optional)
+     */
     getByKeyword(id, options) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
@@ -348,6 +431,11 @@ class TmDBApi {
             return this._getDateObject(data);
         });
     }
+    /**
+     * Get the Recommendations for a media item.
+     * @param id - The media id
+     * @param options - The options to use for the request includes the language and page (optional)
+     */
     getRecommendations(id, options) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
@@ -366,6 +454,11 @@ class TmDBApi {
             return this._getDateObject(data);
         });
     }
+    /**
+     * Get the Similar media items.
+     * @param id - The media id
+     * @param options - The options to use for the request includes the language and page (optional)
+     */
     getSimilar(id, options) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
@@ -384,6 +477,10 @@ class TmDBApi {
             return this._getDateObject(data);
         });
     }
+    /**
+     * Discover Media.
+     * @param options - The options to use for the request includes the library_type, language, page, region, sort_by, certification_country, certification, certification_lte, certification_gte, include_adult, include_video, primary_release_year, primary_release_date_gte, primary_release_date_lte, release_date_gte, release_date_lte, with_release_type, year, vote_count_gte, vote_count_lte, vote_average_gte, vote_average_lte, with_cast, with_crew, with_people, with_companies, with_genres, without_genres
+     */
     discoverMedia(options) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
