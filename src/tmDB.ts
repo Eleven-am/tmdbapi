@@ -565,15 +565,15 @@ export class TmDBApi {
     }
 
     private _getProvider<DataType>(data: TMDBResponse<DataType>, options?: AppendToMovie | AppendToShow | AppendToPerson): TMDBResponse<DataType> {
+        data = this._getDateObject(data);
         if (hasError(data) || !options || !('watch_providers' in options)) {
             return data;
         }
 
-        let newResponse: any = {
+        const newResponse: any = {
             ...data.data,
         }
 
-        newResponse = this._getDateObject(newResponse);
         const watchProviders = newResponse['watch/providers'];
         delete newResponse['watch/providers'];
 

@@ -531,11 +531,11 @@ class TmDBApi {
         return Array.isArray(options) ? options.map(o => `season/${o}`) : [`season/${options}`];
     }
     _getProvider(data, options) {
+        data = this._getDateObject(data);
         if ((0, response_1.hasError)(data) || !options || !('watch_providers' in options)) {
             return data;
         }
-        let newResponse = Object.assign({}, data.data);
-        newResponse = this._getDateObject(newResponse);
+        const newResponse = Object.assign({}, data.data);
         const watchProviders = newResponse['watch/providers'];
         delete newResponse['watch/providers'];
         if (watchProviders) {
