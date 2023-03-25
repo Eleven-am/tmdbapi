@@ -30,7 +30,7 @@ class TmDBApi {
      * @param id - The collection id
      * @param language - The language to use for the request (optional)
      */
-    getCollection(id, language = 'en-US') {
+    getCollection(id, language) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!id) {
                 return {
@@ -59,11 +59,11 @@ class TmDBApi {
      * @param options - The options to use for the request includes the append_to_response and language (optional)
      */
     getMovie(id, options) {
-        var _a, _b, _c, _d;
+        var _a, _b, _c;
         return __awaiter(this, void 0, void 0, function* () {
             const params = {
                 api_key: this._apiKey,
-                language: (_a = options === null || options === void 0 ? void 0 : options.language) !== null && _a !== void 0 ? _a : 'en-US',
+                language: options === null || options === void 0 ? void 0 : options.language,
                 append_to_response: this._getAppendToResponse(options === null || options === void 0 ? void 0 : options.append_to_response)
             };
             const request = {
@@ -74,10 +74,10 @@ class TmDBApi {
             };
             const data = yield (0, request_1.makeRequest)(request);
             const movie = this._getProvider(data, options === null || options === void 0 ? void 0 : options.append_to_response);
-            if ((0, response_1.hasError)(movie) || !((_b = options === null || options === void 0 ? void 0 : options.append_to_response) === null || _b === void 0 ? void 0 : _b.collection)) {
+            if ((0, response_1.hasError)(movie) || !((_a = options === null || options === void 0 ? void 0 : options.append_to_response) === null || _a === void 0 ? void 0 : _a.collection)) {
                 return movie;
             }
-            const collection = yield this.getCollection((_d = (_c = movie.data) === null || _c === void 0 ? void 0 : _c.belongs_to_collection) === null || _d === void 0 ? void 0 : _d.id);
+            const collection = yield this.getCollection((_c = (_b = movie.data) === null || _b === void 0 ? void 0 : _b.belongs_to_collection) === null || _c === void 0 ? void 0 : _c.id);
             const newMovie = Object.assign(Object.assign({}, movie.data), { collection: (0, response_1.unwrapOrNull)(collection) });
             return {
                 data: newMovie,
@@ -90,11 +90,11 @@ class TmDBApi {
      * @param options - The options to use for the request includes the append_to_response and language (optional)
      */
     getShow(id, options) {
-        var _a, _b, _c, _d, _e, _f, _g, _h;
+        var _a, _b, _c, _d, _e, _f, _g;
         return __awaiter(this, void 0, void 0, function* () {
             const params = {
                 api_key: this._apiKey,
-                language: (_a = options === null || options === void 0 ? void 0 : options.language) !== null && _a !== void 0 ? _a : 'en-US',
+                language: options === null || options === void 0 ? void 0 : options.language,
                 append_to_response: this._getAppendToResponse(options === null || options === void 0 ? void 0 : options.append_to_response)
             };
             const request = {
@@ -105,15 +105,15 @@ class TmDBApi {
             };
             const data = yield (0, request_1.makeRequest)(request);
             const show = this._getProvider(data, options === null || options === void 0 ? void 0 : options.append_to_response);
-            if ((0, response_1.hasError)(show) || !((_b = options === null || options === void 0 ? void 0 : options.append_to_response) === null || _b === void 0 ? void 0 : _b.appendSeasons)) {
+            if ((0, response_1.hasError)(show) || !((_a = options === null || options === void 0 ? void 0 : options.append_to_response) === null || _a === void 0 ? void 0 : _a.appendSeasons)) {
                 return show;
             }
-            if (((_c = options === null || options === void 0 ? void 0 : options.append_to_response) === null || _c === void 0 ? void 0 : _c.appendSeasons) === 'all') {
-                options.append_to_response.appendSeasons = (_e = (_d = show.data) === null || _d === void 0 ? void 0 : _d.seasons) === null || _e === void 0 ? void 0 : _e.map(season => season.season_number);
+            if (((_b = options === null || options === void 0 ? void 0 : options.append_to_response) === null || _b === void 0 ? void 0 : _b.appendSeasons) === 'all') {
+                options.append_to_response.appendSeasons = (_d = (_c = show.data) === null || _c === void 0 ? void 0 : _c.seasons) === null || _d === void 0 ? void 0 : _d.map(season => season.season_number);
                 return this.getShow(id, options);
             }
             const newShow = Object.assign({}, show.data);
-            const appended = Array.isArray((_f = options === null || options === void 0 ? void 0 : options.append_to_response) === null || _f === void 0 ? void 0 : _f.appendSeasons) ? (_g = options === null || options === void 0 ? void 0 : options.append_to_response) === null || _g === void 0 ? void 0 : _g.appendSeasons : [(_h = options === null || options === void 0 ? void 0 : options.append_to_response) === null || _h === void 0 ? void 0 : _h.appendSeasons];
+            const appended = Array.isArray((_e = options === null || options === void 0 ? void 0 : options.append_to_response) === null || _e === void 0 ? void 0 : _e.appendSeasons) ? (_f = options === null || options === void 0 ? void 0 : options.append_to_response) === null || _f === void 0 ? void 0 : _f.appendSeasons : [(_g = options === null || options === void 0 ? void 0 : options.append_to_response) === null || _g === void 0 ? void 0 : _g.appendSeasons];
             newShow.appendSeasons = appended.map(season => {
                 const temp = newShow[`season/${season}`];
                 delete newShow[`season/${season}`];
@@ -133,11 +133,10 @@ class TmDBApi {
      * @param options - The options to use for the request includes the append_to_response and language (optional)
      */
     getSeason(id, seasonNumber, options) {
-        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             const params = {
                 api_key: this._apiKey,
-                language: (_a = options === null || options === void 0 ? void 0 : options.language) !== null && _a !== void 0 ? _a : 'en-US',
+                language: options === null || options === void 0 ? void 0 : options.language,
                 append_to_response: this._getAppendToResponse(options === null || options === void 0 ? void 0 : options.append_to_response)
             };
             const request = {
@@ -158,11 +157,10 @@ class TmDBApi {
      * @param options - The options to use for the request includes the append_to_response and language (optional)
      */
     getEpisode(id, seasonNumber, episodeNumber, options) {
-        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             const params = {
                 api_key: this._apiKey,
-                language: (_a = options === null || options === void 0 ? void 0 : options.language) !== null && _a !== void 0 ? _a : 'en-US',
+                language: options === null || options === void 0 ? void 0 : options.language,
                 append_to_response: this._getAppendToResponse(options === null || options === void 0 ? void 0 : options.append_to_response)
             };
             const request = {
@@ -181,11 +179,10 @@ class TmDBApi {
      * @param options - The options to use for the request includes the append_to_response and language (optional)
      */
     getPerson(id, options) {
-        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             const params = {
                 api_key: this._apiKey,
-                language: (_a = options === null || options === void 0 ? void 0 : options.language) !== null && _a !== void 0 ? _a : 'en-US',
+                language: options === null || options === void 0 ? void 0 : options.language,
                 append_to_response: this._getAppendToResponse(options === null || options === void 0 ? void 0 : options.append_to_response)
             };
             const request = {
@@ -207,7 +204,7 @@ class TmDBApi {
         return __awaiter(this, void 0, void 0, function* () {
             const params = {
                 api_key: this._apiKey,
-                language: language !== null && language !== void 0 ? language : 'en-US'
+                language: language,
             };
             const request = {
                 method: 'GET',
@@ -228,7 +225,7 @@ class TmDBApi {
         return __awaiter(this, void 0, void 0, function* () {
             const params = {
                 api_key: this._apiKey,
-                language: language !== null && language !== void 0 ? language : 'en-US'
+                language: language,
             };
             const request = {
                 method: 'GET',
@@ -246,11 +243,10 @@ class TmDBApi {
      * @param options - The options to use for the request includes the library_type, language, page, include_adult, region, year, primary_release_year and first_air_date_year (optional)
      */
     searchTmDB(query, options) {
-        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             const params = {
                 api_key: this._apiKey,
-                language: (_a = options === null || options === void 0 ? void 0 : options.language) !== null && _a !== void 0 ? _a : 'en-US',
+                language: options === null || options === void 0 ? void 0 : options.language,
                 query: query,
                 page: options === null || options === void 0 ? void 0 : options.page,
                 include_adult: options === null || options === void 0 ? void 0 : options.include_adult,
@@ -274,11 +270,10 @@ class TmDBApi {
      * @param options - The options to use for the request includes the language, page and region (optional)
      */
     getUpcomingMovies(options) {
-        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             const params = {
                 api_key: this._apiKey,
-                language: (_a = options === null || options === void 0 ? void 0 : options.language) !== null && _a !== void 0 ? _a : 'en-US',
+                language: options === null || options === void 0 ? void 0 : options.language,
                 page: options === null || options === void 0 ? void 0 : options.page,
                 region: options === null || options === void 0 ? void 0 : options.region
             };
@@ -297,11 +292,10 @@ class TmDBApi {
      * @param options - The options to use for the request includes the language, page and region (optional)
      */
     getNowPlayingMovies(options) {
-        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             const params = {
                 api_key: this._apiKey,
-                language: (_a = options === null || options === void 0 ? void 0 : options.language) !== null && _a !== void 0 ? _a : 'en-US',
+                language: options === null || options === void 0 ? void 0 : options.language,
                 page: options === null || options === void 0 ? void 0 : options.page,
                 region: options === null || options === void 0 ? void 0 : options.region
             };
@@ -320,11 +314,10 @@ class TmDBApi {
      * @param options - The options to use for the request includes the library_type, language, page and region (optional)
      */
     getPopularMedia(options) {
-        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             const params = {
                 api_key: this._apiKey,
-                language: (_a = options === null || options === void 0 ? void 0 : options.language) !== null && _a !== void 0 ? _a : 'en-US',
+                language: options === null || options === void 0 ? void 0 : options.language,
                 page: options === null || options === void 0 ? void 0 : options.page,
                 region: options === null || options === void 0 ? void 0 : options.region
             };
@@ -343,11 +336,10 @@ class TmDBApi {
      * @param options - The options to use for the request includes the library_type, language, page and region (optional)
      */
     getTopRatedMedia(options) {
-        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             const params = {
                 api_key: this._apiKey,
-                language: (_a = options === null || options === void 0 ? void 0 : options.language) !== null && _a !== void 0 ? _a : 'en-US',
+                language: options === null || options === void 0 ? void 0 : options.language,
                 page: options === null || options === void 0 ? void 0 : options.page,
                 region: options === null || options === void 0 ? void 0 : options.region
             };
@@ -366,18 +358,18 @@ class TmDBApi {
      * @param options - The options to use for the request includes the library_type, language, page, region and time_window (optional)
      */
     getTrendingMedia(options) {
-        var _a, _b;
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             const params = {
                 api_key: this._apiKey,
-                language: (_a = options === null || options === void 0 ? void 0 : options.language) !== null && _a !== void 0 ? _a : 'en-US',
+                language: options === null || options === void 0 ? void 0 : options.language,
                 page: options === null || options === void 0 ? void 0 : options.page,
                 region: options === null || options === void 0 ? void 0 : options.region,
                 time_window: options === null || options === void 0 ? void 0 : options.time_window
             };
             const request = {
                 method: 'GET',
-                address: `${this._baseUrl}/trending/${this._getSearchType(options === null || options === void 0 ? void 0 : options.library_type)}/${(_b = options === null || options === void 0 ? void 0 : options.time_window) !== null && _b !== void 0 ? _b : 'day'}`,
+                address: `${this._baseUrl}/trending/${this._getSearchType(options === null || options === void 0 ? void 0 : options.library_type)}/${(_a = options === null || options === void 0 ? void 0 : options.time_window) !== null && _a !== void 0 ? _a : 'day'}`,
                 query: params,
                 fetch: this._fetch
             };
@@ -390,17 +382,17 @@ class TmDBApi {
      * @param options - The options to use for the request includes the language, page, timezone and time_window (optional)
      */
     getAiringShows(options) {
-        var _a, _b;
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             const params = {
                 api_key: this._apiKey,
-                language: (_a = options === null || options === void 0 ? void 0 : options.language) !== null && _a !== void 0 ? _a : 'en-US',
+                language: options === null || options === void 0 ? void 0 : options.language,
                 page: options === null || options === void 0 ? void 0 : options.page,
                 timezone: options === null || options === void 0 ? void 0 : options.timezone
             };
             const request = {
                 method: 'GET',
-                address: `${this._baseUrl}/tv/${(_b = options === null || options === void 0 ? void 0 : options.time_window) !== null && _b !== void 0 ? _b : 'airing_today'}`,
+                address: `${this._baseUrl}/tv/${(_a = options === null || options === void 0 ? void 0 : options.time_window) !== null && _a !== void 0 ? _a : 'airing_today'}`,
                 query: params,
                 fetch: this._fetch
             };
@@ -414,11 +406,10 @@ class TmDBApi {
      * @param options - The options to use for the request includes the library_type, language and page (optional)
      */
     getByKeyword(id, options) {
-        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             const params = {
                 api_key: this._apiKey,
-                language: (_a = options === null || options === void 0 ? void 0 : options.language) !== null && _a !== void 0 ? _a : 'en-US',
+                language: options === null || options === void 0 ? void 0 : options.language,
                 page: options === null || options === void 0 ? void 0 : options.page
             };
             const request = {
@@ -437,11 +428,10 @@ class TmDBApi {
      * @param options - The options to use for the request includes the language and page (optional)
      */
     getRecommendations(id, options) {
-        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             const params = {
                 api_key: this._apiKey,
-                language: (_a = options === null || options === void 0 ? void 0 : options.language) !== null && _a !== void 0 ? _a : 'en-US',
+                language: options === null || options === void 0 ? void 0 : options.language,
                 page: options === null || options === void 0 ? void 0 : options.page
             };
             const request = {
@@ -460,11 +450,10 @@ class TmDBApi {
      * @param options - The options to use for the request includes the language and page (optional)
      */
     getSimilar(id, options) {
-        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             const params = {
                 api_key: this._apiKey,
-                language: (_a = options === null || options === void 0 ? void 0 : options.language) !== null && _a !== void 0 ? _a : 'en-US',
+                language: options === null || options === void 0 ? void 0 : options.language,
                 page: options === null || options === void 0 ? void 0 : options.page
             };
             const request = {
@@ -482,9 +471,8 @@ class TmDBApi {
      * @param options - The options to use for the request includes the library_type, language, page, region, sort_by, certification_country, certification, certification_lte, certification_gte, include_adult, include_video, primary_release_year, primary_release_date_gte, primary_release_date_lte, release_date_gte, release_date_lte, with_release_type, year, vote_count_gte, vote_count_lte, vote_average_gte, vote_average_lte, with_cast, with_crew, with_people, with_companies, with_genres, without_genres
      */
     discoverMedia(options) {
-        var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            const params = Object.assign(Object.assign({}, options === null || options === void 0 ? void 0 : options.params), { api_key: this._apiKey, language: (_a = options === null || options === void 0 ? void 0 : options.language) !== null && _a !== void 0 ? _a : 'en-US', page: options === null || options === void 0 ? void 0 : options.page });
+            const params = Object.assign(Object.assign({}, options === null || options === void 0 ? void 0 : options.params), { api_key: this._apiKey, language: options === null || options === void 0 ? void 0 : options.language, page: options === null || options === void 0 ? void 0 : options.page });
             const request = {
                 method: 'GET',
                 address: `${this._baseUrl}/discover/${this._getSearchType(options === null || options === void 0 ? void 0 : options.library_type)}`,

@@ -52,7 +52,7 @@ export class TmDBApi {
      * @param id - The collection id
      * @param language - The language to use for the request (optional)
      */
-    public async getCollection(id?: number, language: string = 'en-US'): Promise<TMDBResponse<Collection>> {
+    public async getCollection(id?: number, language?: string): Promise<TMDBResponse<Collection>> {
         if (!id) {
             return {
                 error: 'Collection id is required',
@@ -85,7 +85,7 @@ export class TmDBApi {
     public async getMovie<Append extends AppendToMovie>(id: number, options?: MovieOptions<Append>): Promise<TMDBResponse<Movie<Append>>> {
         const params = {
             api_key: this._apiKey,
-            language: options?.language ?? 'en-US',
+            language: options?.language,
             append_to_response: this._getAppendToResponse(options?.append_to_response)
         }
 
@@ -121,7 +121,7 @@ export class TmDBApi {
     public async getShow<Append extends AppendToShow>(id: number, options?: TVShowOptions<Append>): Promise<TMDBResponse<TVShow<Append>>> {
         const params = {
             api_key: this._apiKey,
-            language: options?.language ?? 'en-US',
+            language: options?.language,
             append_to_response: this._getAppendToResponse(options?.append_to_response)
         }
 
@@ -168,7 +168,7 @@ export class TmDBApi {
     public async getSeason<Append extends AppendToSeason>(id: number, seasonNumber: number, options?: SeasonOptions<Append>): Promise<TMDBResponse<Season<Append>>> {
         const params = {
             api_key: this._apiKey,
-            language: options?.language ?? 'en-US',
+            language: options?.language,
             append_to_response: this._getAppendToResponse(options?.append_to_response)
         }
 
@@ -193,7 +193,7 @@ export class TmDBApi {
     public async getEpisode<Append extends AppendToEpisode>(id: number, seasonNumber: number, episodeNumber: number, options?: EpisodeOptions<Append>): Promise<TMDBResponse<Episode<Append>>> {
         const params = {
             api_key: this._apiKey,
-            language: options?.language ?? 'en-US',
+            language: options?.language,
             append_to_response: this._getAppendToResponse(options?.append_to_response)
         }
 
@@ -216,7 +216,7 @@ export class TmDBApi {
     public async getPerson<Append extends AppendToPerson>(id: number, options?: PersonOptions<Append>): Promise<TMDBResponse<Person<Append>>> {
         const params = {
             api_key: this._apiKey,
-            language: options?.language ?? 'en-US',
+            language: options?.language,
             append_to_response: this._getAppendToResponse(options?.append_to_response)
         }
 
@@ -239,7 +239,7 @@ export class TmDBApi {
     public async getCompany(id: number, language?: string): Promise<TMDBResponse<Company>> {
         const params = {
             api_key: this._apiKey,
-            language: language ?? 'en-US'
+            language: language,
         }
 
         const request: Request = {
@@ -261,7 +261,7 @@ export class TmDBApi {
     public async getNetwork(id: number, language?: string): Promise<TMDBResponse<Company>> {
         const params = {
             api_key: this._apiKey,
-            language: language ?? 'en-US'
+            language: language,
         }
 
         const request: Request = {
@@ -283,7 +283,7 @@ export class TmDBApi {
     public async searchTmDB<Library extends LibraryType>(query: string, options?: SearchOptions<Library>): Promise<TMDBResponse<SearchResult<Library>>> {
         const params = {
             api_key: this._apiKey,
-            language: options?.language ?? 'en-US',
+            language: options?.language,
             query: query,
             page: options?.page,
             include_adult: options?.include_adult,
@@ -311,7 +311,7 @@ export class TmDBApi {
     public async getUpcomingMovies(options?: UpcomingMoviesOptions): Promise<TMDBResponse<UpcomingMovies>> {
         const params = {
             api_key: this._apiKey,
-            language: options?.language ?? 'en-US',
+            language: options?.language,
             page: options?.page,
             region: options?.region
         }
@@ -334,7 +334,7 @@ export class TmDBApi {
     public async getNowPlayingMovies(options?: NowPlayingMoviesOptions): Promise<TMDBResponse<NowPlayingMovies>> {
         const params = {
             api_key: this._apiKey,
-            language: options?.language ?? 'en-US',
+            language: options?.language,
             page: options?.page,
             region: options?.region
         }
@@ -357,7 +357,7 @@ export class TmDBApi {
     public async getPopularMedia<Library extends LibraryType>(options?: PopularMediaOptions<Library>): Promise<TMDBResponse<PopularMedia<Library>>> {
         const params = {
             api_key: this._apiKey,
-            language: options?.language ?? 'en-US',
+            language: options?.language,
             page: options?.page,
             region: options?.region
         }
@@ -380,7 +380,7 @@ export class TmDBApi {
     public async getTopRatedMedia<Library extends LibraryType>(options?: TopRatedMediaOptions<Library>): Promise<TMDBResponse<TopRatedMedia<Library>>> {
         const params = {
             api_key: this._apiKey,
-            language: options?.language ?? 'en-US',
+            language: options?.language,
             page: options?.page,
             region: options?.region
         }
@@ -403,7 +403,7 @@ export class TmDBApi {
     public async getTrendingMedia<Library extends LibraryType>(options?: TrendingMediaOptions<Library>): Promise<TMDBResponse<TrendingMedia<Library>>> {
         const params = {
             api_key: this._apiKey,
-            language: options?.language ?? 'en-US',
+            language: options?.language,
             page: options?.page,
             region: options?.region,
             time_window: options?.time_window
@@ -427,7 +427,7 @@ export class TmDBApi {
     public async getAiringShows(options?: AiringShowsOptions): Promise<TMDBResponse<AiringShows>> {
         const params = {
             api_key: this._apiKey,
-            language: options?.language ?? 'en-US',
+            language: options?.language,
             page: options?.page,
             timezone: options?.timezone
         }
@@ -451,7 +451,7 @@ export class TmDBApi {
     public async getByKeyword<Library extends LibraryType>(id: number, options?: KeywordOptions<Library>): Promise<TMDBResponse<KeywordResult<Library>>> {
         const params = {
             api_key: this._apiKey,
-            language: options?.language ?? 'en-US',
+            language: options?.language,
             page: options?.page
         }
 
@@ -474,7 +474,7 @@ export class TmDBApi {
     public async getRecommendations<Library extends LibraryType>(id: number, options?: RecommendationsOptions<Library>): Promise<TMDBResponse<Recommendations<Library>>> {
         const params = {
             api_key: this._apiKey,
-            language: options?.language ?? 'en-US',
+            language: options?.language,
             page: options?.page
         }
 
@@ -497,7 +497,7 @@ export class TmDBApi {
     public async getSimilar<Library extends LibraryType>(id: number, options?: SimilarOptions<Library>): Promise<TMDBResponse<Similar<Library>>> {
         const params = {
             api_key: this._apiKey,
-            language: options?.language ?? 'en-US',
+            language: options?.language,
             page: options?.page
         }
 
@@ -520,7 +520,7 @@ export class TmDBApi {
         const params = {
             ...options?.params,
             api_key: this._apiKey,
-            language: options?.language ?? 'en-US',
+            language: options?.language,
             page: options?.page
         }
 
