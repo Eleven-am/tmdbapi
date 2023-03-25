@@ -1,3 +1,4 @@
 import { TmDBApi } from "./tmDB";
 import { hasData, hasError } from "./response";
-export { TmDBApi, hasData, hasError };
+import { ImageApi } from "./imageApi";
+export { TmDBApi, hasData, hasError, ImageApi };

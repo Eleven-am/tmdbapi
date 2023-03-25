@@ -172,7 +172,7 @@ interface Image {
     vote_count: number;
     width: number;
 }
-interface AppendedImages {
+export interface AppendedImages {
     backdrops: Image[];
     posters: Image[];
     logos: Image[];

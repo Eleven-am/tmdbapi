@@ -1,0 +1,441 @@
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ImageApi = void 0;
+const request_1 = require("./request");
+const response_1 = require("./response");
+const helpers_1 = require("./helpers");
+const appleStoreFronts = [{
+        countryCode: 'US',
+        languageCode: 'en',
+        storeFrontId: 143441
+    }, {
+        countryCode: 'GB',
+        languageCode: 'en',
+        storeFrontId: 143444
+    }, {
+        countryCode: 'AU',
+        languageCode: 'en',
+        storeFrontId: 143460
+    }, {
+        countryCode: 'CA',
+        languageCode: 'en',
+        storeFrontId: 143455
+    }, {
+        countryCode: 'DE',
+        languageCode: 'de',
+        storeFrontId: 143443
+    }, {
+        countryCode: 'FR',
+        languageCode: 'fr',
+        storeFrontId: 143442
+    }, {
+        countryCode: 'IT',
+        languageCode: 'it',
+        storeFrontId: 143450
+    }, {
+        countryCode: 'JP',
+        languageCode: 'ja',
+        storeFrontId: 143462
+    }, {
+        countryCode: 'NL',
+        languageCode: 'nl',
+        storeFrontId: 143452
+    }, {
+        countryCode: 'ES',
+        languageCode: 'es',
+        storeFrontId: 143454
+    }, {
+        countryCode: 'SE',
+        languageCode: 'sv',
+        storeFrontId: 143457
+    }, {
+        countryCode: 'NO',
+        languageCode: 'no',
+        storeFrontId: 143458
+    }, {
+        countryCode: 'DK',
+        languageCode: 'da',
+        storeFrontId: 143459
+    }, {
+        countryCode: 'FI',
+        languageCode: 'fi',
+        storeFrontId: 143447
+    }, {
+        countryCode: 'NZ',
+        languageCode: 'en',
+        storeFrontId: 143461
+    }, {
+        countryCode: 'IE',
+        languageCode: 'en',
+        storeFrontId: 143446
+    }, {
+        countryCode: 'CH',
+        languageCode: 'de',
+        storeFrontId: 143445
+    }, {
+        countryCode: 'AT',
+        languageCode: 'de',
+        storeFrontId: 143448
+    }, {
+        countryCode: 'BE',
+        languageCode: 'fr',
+        storeFrontId: 143449
+    }, {
+        countryCode: 'LU',
+        languageCode: 'fr',
+        storeFrontId: 143451
+    }, {
+        countryCode: 'SG',
+        languageCode: 'en',
+        storeFrontId: 143464
+    }, {
+        countryCode: 'HK',
+        languageCode: 'en',
+        storeFrontId: 143465
+    }, {
+        countryCode: 'KR',
+        languageCode: 'ko',
+        storeFrontId: 143466
+    }, {
+        countryCode: 'TW',
+        languageCode: 'zh',
+        storeFrontId: 143467
+    }, {
+        countryCode: 'CN',
+        languageCode: 'zh',
+        storeFrontId: 143468
+    }, {
+        countryCode: 'IN',
+        languageCode: 'en',
+        storeFrontId: 143470
+    }, {
+        countryCode: 'RU',
+        languageCode: 'ru',
+        storeFrontId: 143469
+    }, {
+        countryCode: 'TR',
+        languageCode: 'tr',
+        storeFrontId: 143473
+    }, {
+        countryCode: 'AE',
+        languageCode: 'en',
+        storeFrontId: 143474
+    }];
+class ImageApi {
+    constructor(apiKey, fetch, baseURL = 'https://webservice.fanart.tv/v3') {
+        this._apiKey = apiKey;
+        this._fetch = fetch;
+        this._baseURL = baseURL;
+    }
+    /**
+     * Get fan art images for a given library type and id
+     * @param type - The library type
+     * @param id - The id of the library item
+     * @param year - The year of the library item
+     */
+    getFanArtImages(type, id, year) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const params = {
+                api_key: this._apiKey
+            };
+            const request = {
+                method: 'GET',
+                address: `${this._baseURL}/${this._getFanArtEndpoint(type)}/${id}`,
+                query: params,
+                fetch: this._fetch
+            };
+            const data = yield (0, request_1.makeRequest)(request);
+            if ((0, response_1.hasError)(data)) {
+                return data;
+            }
+            return {
+                data: this._convertImages(data.data, year)
+            };
+        });
+    }
+    /**
+     * Get images from ben dodson's apple api
+     * @param mediaType - The library type
+     * @param mediaName - The name of the library item
+     * @param options - The options for the request
+     */
+    getAppleImages(mediaType, mediaName, options) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const result = yield this._getImagesFromBenDodson(mediaType, mediaName, options);
+            if ((0, response_1.hasError)(result)) {
+                return result;
+            }
+            const data = result.data;
+            const type = mediaType === 'MOVIE' ? 'Movie' : 'Show';
+            const filteredData = data.filter((item) => item.type === type);
+            if (!filteredData.length) {
+                return {
+                    error: 'No data returned',
+                    code: 404
+                };
+            }
+            const posters = [];
+            const backdrops = [];
+            const logos = [];
+            filteredData.forEach((item) => {
+                const drift = (0, helpers_1.levenshtein)(item.title, mediaName);
+                const language = (options === null || options === void 0 ? void 0 : options.languageCode) || 'en';
+                const year = item.releaseDate ? new Date(item.releaseDate).getFullYear() : (options === null || options === void 0 ? void 0 : options.year) || 0;
+                const likes = Math.ceil(2000 / (drift === 0 ? 1 : drift)) + (year === (options === null || options === void 0 ? void 0 : options.year) ? 1000 : -3000);
+                const source = 'APPLE';
+                const data = {
+                    year, drift, likes,
+                    language, source
+                };
+                const poster = item.images.coverArt16X9 || null;
+                const logo = item.images.fullColorContentLogo ? item.images.fullColorContentLogo : item.images.singleColorContentLogo || null;
+                const background = item.images.previewFrame || null;
+                if (poster) {
+                    posters.push(Object.assign(Object.assign({}, data), { url: this._interpretImage(poster, 'jpg', 1280) }));
+                }
+                if (background) {
+                    backdrops.push(Object.assign(Object.assign({}, data), { url: this._interpretImage(background, 'jpg') }));
+                }
+                if (logo) {
+                    logos.push(Object.assign(Object.assign({}, data), { url: this._interpretImage(logo, 'png') }));
+                }
+            });
+            return {
+                data: {
+                    posters,
+                    backdrops,
+                    logos
+                }
+            };
+        });
+    }
+    /**
+     * Convert the TmDB images to the front end format
+     * @param images - The images to convert
+     * @param options - The options for the conversion
+     */
+    convertTmDBImages(images, options) {
+        const languageCode = (options === null || options === void 0 ? void 0 : options.languageCode) || 'en';
+        const mappedPosters = [...images.backdrops, ...images.posters]
+            .filter(image => image.file_path !== null)
+            .map(image => {
+            let likes = 500;
+            likes += image.aspect_ratio > 1.5 ?
+                image.iso_639_1 === null ? -500 :
+                    image.iso_639_1 === languageCode ? 500 : 200 :
+                image.iso_639_1 === null ? -400 :
+                    image.iso_639_1 === languageCode ? -300 : -200;
+            likes += (image.vote_count * image.vote_average);
+            return {
+                year: (options === null || options === void 0 ? void 0 : options.year) || 0,
+                language: image.iso_639_1,
+                source: 'TmDB',
+                likes: likes,
+                drift: 0,
+                url: 'https://image.tmdb.org/t/p/original' + image.file_path
+            };
+        });
+        const mappedBackdrops = [...images.backdrops, ...images.posters]
+            .filter(image => image.file_path !== null)
+            .map(image => {
+            let likes = 0;
+            likes += image.aspect_ratio > 1.5 ?
+                image.iso_639_1 === null ? 500 :
+                    image.iso_639_1 === languageCode ? -200 : -500 :
+                image.iso_639_1 === null ? 400 :
+                    image.iso_639_1 === languageCode ? -200 : -500;
+            return {
+                year: (options === null || options === void 0 ? void 0 : options.year) || 0,
+                language: image.iso_639_1,
+                source: 'TmDB',
+                likes: likes,
+                drift: 0,
+                url: 'https://image.tmdb.org/t/p/original' + image.file_path
+            };
+        });
+        const mappedLogos = images.logos
+            .filter(image => image.file_path !== null)
+            .map(image => {
+            let likes = Math.floor(image.vote_count * image.vote_average);
+            likes += image.iso_639_1 === languageCode ? 1000 :
+                image.iso_639_1 === null ? -1000 : 0;
+            return {
+                year: (options === null || options === void 0 ? void 0 : options.year) || 0,
+                language: image.iso_639_1,
+                source: 'TmDB',
+                likes: likes,
+                drift: 0,
+                url: 'https://image.tmdb.org/t/p/original' + image.file_path
+            };
+        });
+        return {
+            logos: mappedLogos, backdrops: mappedBackdrops,
+            posters: mappedPosters,
+        };
+    }
+    _interpretImage(image, format, newWidth) {
+        const ratio = image.width / image.height;
+        const newHeight = newWidth ? newWidth / ratio : image.height;
+        return image.url.replace('{w}', String(newWidth || image.width))
+            .replace('{h}', String(newHeight))
+            .replace('{f}', format);
+    }
+    _getImagesFromBenDodson(mediaType, mediaName, options) {
+        var _a, _b;
+        return __awaiter(this, void 0, void 0, function* () {
+            const storeFrontData = this._getAppleStoreFront(options);
+            let storeFront = (0, response_1.hasData)(storeFrontData) ? storeFrontData.data : appleStoreFronts[0];
+            const body = {
+                locale: `${storeFront.languageCode}-${storeFront.countryCode}`,
+                query: mediaName, storeFront: storeFront.storeFrontId,
+            };
+            const request = {
+                method: 'POST',
+                address: 'https://itunesartwork.bendodson.com/url.php',
+                body: body,
+                fetch: this._fetch
+            };
+            const result = yield (0, request_1.makeRequest)(request);
+            if ((0, response_1.hasError)(result)) {
+                return result;
+            }
+            const url = new URL(result.data.url);
+            const searchParams = new URLSearchParams(url.search);
+            const params = Object.assign(Object.assign({}, Object.fromEntries(searchParams.entries())), { sf: storeFront.storeFrontId, l: storeFront.languageCode, c: storeFront.countryCode, q: mediaName });
+            const newRequest = {
+                method: 'GET',
+                address: url.origin + url.pathname,
+                query: params,
+                fetch: this._fetch
+            };
+            const newResult = yield (0, request_1.makeRequest)(newRequest);
+            if ((0, response_1.hasError)(newResult)) {
+                return newResult;
+            }
+            const newData = newResult.data;
+            if ((_b = (_a = newData.data) === null || _a === void 0 ? void 0 : _a.canvas) === null || _b === void 0 ? void 0 : _b.shelves.length) {
+                const movies = newData.data.canvas.shelves.find((shelf) => shelf.title === 'Movies');
+                const tvShows = newData.data.canvas.shelves.find((shelf) => shelf.title === 'TV Shows');
+                const shelf = mediaType === 'MOVIE' ? movies : tvShows;
+                if (shelf && shelf.items.length) {
+                    return {
+                        data: shelf.items
+                    };
+                }
+            }
+            return {
+                error: `No Apple images found for ${mediaName}`,
+                code: 404
+            };
+        });
+    }
+    _getFanArtEndpoint(type) {
+        switch (type) {
+            case 'MOVIE':
+                return 'movies';
+            case 'SHOW':
+                return 'tv';
+        }
+    }
+    _getAppleStoreFront(options) {
+        if (!options) {
+            return {
+                data: appleStoreFronts[0]
+            };
+        }
+        if (options.languageCode) {
+            if (options.countryCode) {
+                const storeFront = appleStoreFronts.find((front) => front.languageCode === options.languageCode && front.countryCode === options.countryCode);
+                if (storeFront) {
+                    return {
+                        data: storeFront
+                    };
+                }
+            }
+            const storeFront = appleStoreFronts.find((front) => front.languageCode === options.languageCode);
+            if (storeFront) {
+                return {
+                    data: storeFront
+                };
+            }
+        }
+        else if (options.countryCode) {
+            const storeFront = appleStoreFronts.find((front) => front.countryCode === options.countryCode);
+            if (storeFront) {
+                return {
+                    data: storeFront
+                };
+            }
+        }
+        return {
+            error: 'No store front found',
+            code: 404
+        };
+    }
+    _convertImages(images, year) {
+        const logos = images.hdmovielogo || images.hdtvlogo || [];
+        const clearArts = images.hdmovieclearart || images.hdclearart || [];
+        const posters = images.movieposter || images.tvposter || [];
+        const backgrounds = images.moviebackground || images.showbackground || [];
+        const thumbs = images.moviethumb || images.tvthumb || [];
+        const resultLogos = logos.map((logo) => {
+            return {
+                language: logo.lang,
+                likes: +(logo.likes),
+                source: 'X-ART',
+                url: logo.url,
+                drift: 0, year: year
+            };
+        });
+        const resultBackdrops = backgrounds.map((backdrop) => {
+            return {
+                language: backdrop.lang,
+                likes: +(backdrop.likes),
+                source: 'X-ART',
+                url: backdrop.url,
+                drift: 0, year: year
+            };
+        });
+        const resultPosters = posters.map((poster) => {
+            return {
+                language: poster.lang,
+                likes: +(poster.likes) - 2000,
+                source: 'X-ART',
+                url: poster.url,
+                drift: 0, year: year
+            };
+        });
+        const resultThumbs = thumbs.map((thumb) => {
+            return {
+                language: thumb.lang,
+                likes: +(thumb.likes),
+                source: 'X-ART',
+                url: thumb.url,
+                drift: 0, year: year
+            };
+        });
+        const resultClearArts = clearArts.map((clearArt) => {
+            return {
+                language: clearArt.lang,
+                likes: +(clearArt.likes) - 1000,
+                source: 'X-ART',
+                url: clearArt.url,
+                drift: 0, year: year
+            };
+        });
+        return {
+            logos: resultLogos, backdrops: resultBackdrops,
+            posters: [...resultPosters, ...resultThumbs, ...resultClearArts],
+        };
+    }
+}
+exports.ImageApi = ImageApi;

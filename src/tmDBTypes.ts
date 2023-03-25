@@ -195,7 +195,7 @@ interface Image {
     width: number;
 }
 
-interface AppendedImages {
+export interface AppendedImages {
     backdrops: Image[];
     posters: Image[];
     logos: Image[];
@@ -473,7 +473,6 @@ interface BaseTVShow {
     vote_average: number;
     vote_count: number;
 }
-
 
 type AppendedTVShowRecommendations = Result<MiniMovie>;
 

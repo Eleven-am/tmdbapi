@@ -81,7 +81,7 @@
     "lib": [
       "dom",
       "es5",
-      "ES2017",
+      "ES2019",
       "scripthost",
       "es2015.generator"
     ]
