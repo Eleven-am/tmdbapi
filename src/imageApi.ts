@@ -134,12 +134,10 @@ const appleStoreFronts: AppleStoreFront[] = [{
 }];
 
 export class ImageApi {
-    private readonly _apiKey;
     private readonly _baseURL;
     private readonly _fetch: FetchType | undefined;
 
-    constructor(apiKey: string, fetch?: FetchType, baseURL = 'https://webservice.fanart.tv/v3') {
-        this._apiKey = apiKey;
+    constructor(fetch?: FetchType, baseURL = 'https://webservice.fanart.tv/v3') {
         this._fetch = fetch;
         this._baseURL = baseURL;
     }
@@ -149,10 +147,11 @@ export class ImageApi {
      * @param type - The library type
      * @param id - The id of the library item
      * @param year - The year of the library item
+     * @param apiKey - The fan art api key
      */
-    public async getFanArtImages<Library extends LibraryType>(type: Library, id: number, year: number): Promise<TMDBResponse<FrontImages>> {
+    public async getFanArtImages<Library extends LibraryType>(type: Library, id: number, year: number, apiKey: string): Promise<TMDBResponse<FrontImages>> {
         const params = {
-            api_key: this._apiKey
+            api_key: apiKey
         }
 
         const request: Request = {
