@@ -58,8 +58,6 @@ interface CountryProviderOptions {
     link: string;
 }
 
-type Provider = Record<string, CountryProviderOptions>;
-
 interface BelongsToCollection {
     id: number;
     name: string;
@@ -97,7 +95,7 @@ interface Video {
     key: string;
     site: string;
     size: number;
-    type: string;
+    type: 'Trailer' | 'Teaser' | 'Clip' | 'Featurette' | 'Behind the Scenes' | 'Bloopers';
     official: boolean;
     published_at: Date;
     id: string;
@@ -205,28 +203,6 @@ interface Keyword {
     name: string;
 }
 
-interface AppendedKeywords {
-    results: Keyword[];
-}
-
-interface AppendedExternalIds {
-    imdb_id: string;
-    wikidata_id?: any;
-    facebook_id: string;
-    instagram_id: string;
-    twitter_id: string;
-}
-
-interface ContentRatingsResult {
-    descriptors: any[];
-    iso_3166_1: string;
-    rating: string;
-}
-
-interface AppendedContentRatings {
-    results: ContentRatingsResult[];
-}
-
 interface ReleaseDate {
     certification: string;
     iso_639_1: string;
@@ -240,26 +216,10 @@ interface ReleaseDatesResults {
     release_dates: ReleaseDate[];
 }
 
-interface AppendedReleaseDates {
-    results: ReleaseDatesResults[];
-}
-
-interface ListItem {
-    description: string;
-    favorite_count: number;
-    id: number;
-    item_count: number;
-    iso_639_1: string;
-    list_type: string;
-    name: string;
-    poster_path: null | string;
-
-}
-
-interface AlternativeTitle {
+interface ContentRatingsResult {
+    descriptors: any[];
     iso_3166_1: string;
-    title: Date;
-    type: string;
+    rating: string;
 }
 
 interface Review {
@@ -275,6 +235,45 @@ interface Review {
     id: string;
     updated_at: Date;
     url: string;
+}
+
+interface ListItem {
+    description: string;
+    favorite_count: number;
+    id: number;
+    item_count: number;
+    iso_639_1: string;
+    list_type: string;
+    name: string;
+    poster_path: null | string;
+
+}
+
+interface AppendedKeywords {
+    results: Keyword[];
+}
+
+interface AppendedExternalIds {
+    imdb_id: string;
+    wikidata_id?: any;
+    facebook_id: string;
+    instagram_id: string;
+    twitter_id: string;
+}
+
+interface AppendedContentRatings {
+    results: ContentRatingsResult[];
+}
+
+interface AppendedReleaseDates {
+    results: ReleaseDatesResults[];
+}
+
+
+interface AlternativeTitle {
+    iso_3166_1: string;
+    title: Date;
+    type: string;
 }
 
 export interface Collection {
@@ -318,6 +317,8 @@ export interface BaseMovie {
 type AppendedReviews = Result<Review>;
 
 type AppendedLists = Result<ListItem>;
+
+type Provider = Record<string, CountryProviderOptions>;
 
 type AppendedAlternativeTitles = {
     titles: AlternativeTitle[];
@@ -479,7 +480,7 @@ type AppendedTVShowSimilar = Result<MiniMovie>;
 
 interface AppendedTVShow {
     videos: AppendedVideos;
-    credits: AppendedCredits;
+    tv_credits: AppendedCredits;
     recommendations: AppendedTVShowRecommendations;
     similar: AppendedTVShowSimilar;
     changes: AppendedChanges;

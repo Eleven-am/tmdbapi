@@ -555,6 +555,7 @@ export class TmDBApi {
         if (options && 'tv_credits' in options) appendToResponse.push('tv_credits');
         if (options && 'combined_credits' in options) appendToResponse.push('combined_credits');
         if (options && 'tagged_images' in options) appendToResponse.push('tagged_images');
+        if (options && 'content_ratings' in options) appendToResponse.push('content_ratings');
         if (appendToResponse.length === 0) return undefined;
         return appendToResponse;
     }

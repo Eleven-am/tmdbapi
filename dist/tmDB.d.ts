@@ -2,6 +2,9 @@ import { FetchType } from "./request";
 import { AiringShows, AiringShowsOptions, AppendToEpisode, AppendToMovie, AppendToPerson, AppendToSeason, AppendToShow, Collection, Company, Discover, DiscoverOptions, Episode, EpisodeOptions, KeywordOptions, KeywordResult, LibraryType, Movie, MovieOptions, NowPlayingMovies, NowPlayingMoviesOptions, Person, PersonOptions, PopularMedia, PopularMediaOptions, Recommendations, RecommendationsOptions, SearchOptions, SearchResult, Season, SeasonOptions, Similar, SimilarOptions, TopRatedMedia, TopRatedMediaOptions, TrendingMedia, TrendingMediaOptions, TVShow, TVShowOptions, UpcomingMovies, UpcomingMoviesOptions } from "./tmDBTypes";
 import { TMDBResponse } from "./response";
 export declare class TmDBApi {
+    private readonly _apiKey;
+    private readonly _baseUrl;
+    private readonly _fetch;
     /**
      * Creates an instance of TmDBApi.
      * @param apiKey - The API key for the TMDb API
@@ -119,4 +122,9 @@ export declare class TmDBApi {
      * @param options - The options to use for the request includes the library_type, language, page, region, sort_by, certification_country, certification, certification_lte, certification_gte, include_adult, include_video, primary_release_year, primary_release_date_gte, primary_release_date_lte, release_date_gte, release_date_lte, with_release_type, year, vote_count_gte, vote_count_lte, vote_average_gte, vote_average_lte, with_cast, with_crew, with_people, with_companies, with_genres, without_genres
      */
     discoverMedia<Library extends LibraryType>(options?: DiscoverOptions<Library>): Promise<TMDBResponse<Discover<Library>>>;
+    private _getAppendToResponse;
+    private _getSeasonsAppendToShowResponse;
+    private _getProvider;
+    private _getDateObject;
+    private _getSearchType;
 }
