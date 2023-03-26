@@ -1,6 +1,6 @@
 {
   "name": "@eleven-am/tmdbapi",
-  "version": "1.0.24",
+  "version": "1.0.25",
   "description": "A simple wrapper for the TMDB API",
   "keywords": [
     "tmdb",
