@@ -126,6 +126,21 @@ class TmDBApi {
             };
         });
     }
+    getMedia(id, library, options) {
+        return __awaiter(this, void 0, void 0, function* () {
+            switch (library) {
+                case 'MOVIE':
+                    return yield this.getMovie(id, options);
+                case 'SHOW':
+                    return yield this.getShow(id, options);
+                default:
+                    return {
+                        error: 'Invalid library type',
+                        code: 400
+                    };
+            }
+        });
+    }
     /**
      * Get a Season by Show id and Season number.
      * @param id - The show id

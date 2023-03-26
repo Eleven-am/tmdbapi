@@ -1,7 +1,7 @@
 import {FetchType, makeRequest, Request} from "./request";
 import {
     AiringShows, AiringShowsOptions,
-    AppendToEpisode,
+    AppendToEpisode, AppendToMedia,
     AppendToMovie,
     AppendToPerson,
     AppendToSeason,
@@ -10,7 +10,7 @@ import {
     Company, Discover, DiscoverOptions,
     Episode,
     EpisodeOptions, KeywordOptions, KeywordResult,
-    LibraryType,
+    LibraryType, Media, MediaOptions,
     Movie,
     MovieOptions,
     NowPlayingMovies,
@@ -156,6 +156,20 @@ export class TmDBApi {
 
         return {
             data: newShow
+        }
+    }
+
+    public async getMedia<Library extends LibraryType, Append extends AppendToMedia<Library>>(id: number, library: Library, options?: MediaOptions<Library, Append>): Promise<TMDBResponse<Media<Library, Append>>> {
+        switch (library) {
+            case 'MOVIE':
+                return await this.getMovie(id, options) as any;
+            case 'SHOW':
+                return await this.getShow(id, options) as any;
+            default:
+                return {
+                    error: 'Invalid library type',
+                    code: 400
+                }
         }
     }
 

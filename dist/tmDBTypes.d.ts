@@ -700,4 +700,11 @@ export interface DiscoverOptions<Type extends LibraryType> {
     params?: DiscoverParams;
 }
 export type Discover<Type extends LibraryType> = Result<LibraryResultType<Type>>;
+export type AppendToMedia<Type extends LibraryType> = Type extends 'MOVIE' ? AppendToMovie : Type extends 'SHOW' ? AppendToShow : never;
+export type Media<Type extends LibraryType, Append extends AppendToMedia<Type>> = Type extends 'MOVIE' ? Movie<Append> : Type extends 'SHOW' ? TVShow<Append> : never;
+export interface MediaOptions<Type extends LibraryType, Append extends AppendToMedia<Type>> {
+    language?: string;
+    append_to_response?: Append;
+    include_image_language?: string | string[];
+}
 export {};
