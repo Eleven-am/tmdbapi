@@ -421,7 +421,7 @@ type AppendedTVShowRecommendations = Result<MiniMovie>;
 type AppendedTVShowSimilar = Result<MiniMovie>;
 interface AppendedTVShow {
     videos: AppendedVideos;
-    tv_credits: AppendedCredits;
+    credits: AppendedCredits;
     recommendations: AppendedTVShowRecommendations;
     similar: AppendedTVShowSimilar;
     changes: AppendedChanges;
