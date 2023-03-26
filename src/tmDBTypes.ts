@@ -131,10 +131,9 @@ interface Crew {
     original_name: string;
     popularity: number;
     profile_path: string;
-    cast_id: number;
-    character: string;
     credit_id: string;
-    order: number;
+    department: string;
+    job: string;
 }
 
 interface AppendedCredits {
