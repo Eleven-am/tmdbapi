@@ -39,7 +39,7 @@ function makeRequest(request) {
     if (request.body && typeof request.body === 'object') {
         body = JSON.stringify(request.body);
     }
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
         var _a;
         let address = '';
         let fetch = (_a = request.fetch) !== null && _a !== void 0 ? _a : window.fetch;
@@ -47,10 +47,7 @@ function makeRequest(request) {
             address = url.toString();
         }
         catch (e) {
-            resolve({
-                error: e.message,
-                code: 500
-            });
+            reject(e);
         }
         fetch(address, {
             method,
@@ -61,32 +58,20 @@ function makeRequest(request) {
             .then((response) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const json = yield response.json();
-                resolve({
-                    data: json,
-                    code: response.status
-                });
+                resolve(json);
             }
             catch (e) {
                 try {
                     const text = yield response.text();
-                    resolve({
-                        data: text,
-                        code: response.status
-                    });
+                    resolve(text);
                 }
                 catch (e) {
-                    resolve({
-                        error: e.message,
-                        code: response.status
-                    });
+                    reject(e);
                 }
             }
         }))
             .catch((e) => {
-            resolve({
-                error: e.message,
-                code: 500
-            });
+            reject(e);
         });
     });
 }

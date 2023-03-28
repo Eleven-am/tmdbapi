@@ -11,7 +11,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TmDBApi = void 0;
 const request_1 = require("./request");
-const response_1 = require("./response");
 const helpers_1 = require("./helpers");
 class TmDBApi {
     /**
@@ -33,10 +32,7 @@ class TmDBApi {
     getCollection(id, language) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!id) {
-                return {
-                    error: 'Collection id is required',
-                    code: 400
-                };
+                throw new Error('Collection id is required');
             }
             const params = {
                 language,
@@ -59,7 +55,7 @@ class TmDBApi {
      * @param options - The options to use for the request includes the append_to_response and language (optional)
      */
     getMovie(id, options) {
-        var _a, _b, _c;
+        var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
             const params = {
                 api_key: this._apiKey,
@@ -74,14 +70,12 @@ class TmDBApi {
             };
             const data = yield (0, request_1.makeRequest)(request);
             const movie = this._getProvider(data, options === null || options === void 0 ? void 0 : options.append_to_response);
-            if ((0, response_1.hasError)(movie) || !((_a = options === null || options === void 0 ? void 0 : options.append_to_response) === null || _a === void 0 ? void 0 : _a.collection)) {
+            if (!((_a = options === null || options === void 0 ? void 0 : options.append_to_response) === null || _a === void 0 ? void 0 : _a.collection)) {
                 return movie;
             }
-            const collection = yield this.getCollection((_c = (_b = movie.data) === null || _b === void 0 ? void 0 : _b.belongs_to_collection) === null || _c === void 0 ? void 0 : _c.id);
-            const newMovie = Object.assign(Object.assign({}, movie.data), { collection: (0, response_1.unwrapOrNull)(collection) });
-            return {
-                data: newMovie,
-            };
+            const collection = yield this.getCollection((_b = movie === null || movie === void 0 ? void 0 : movie.belongs_to_collection) === null || _b === void 0 ? void 0 : _b.id);
+            const newMovie = Object.assign(Object.assign({}, movie), { collection: collection !== null && collection !== void 0 ? collection : null });
+            return Object.assign({}, newMovie);
         });
     }
     /**
@@ -90,7 +84,7 @@ class TmDBApi {
      * @param options - The options to use for the request includes the append_to_response and language (optional)
      */
     getShow(id, options) {
-        var _a, _b, _c, _d, _e, _f, _g;
+        var _a, _b, _c, _d, _e, _f;
         return __awaiter(this, void 0, void 0, function* () {
             const params = {
                 api_key: this._apiKey,
@@ -105,15 +99,15 @@ class TmDBApi {
             };
             const data = yield (0, request_1.makeRequest)(request);
             const show = this._getProvider(data, options === null || options === void 0 ? void 0 : options.append_to_response);
-            if ((0, response_1.hasError)(show) || !((_a = options === null || options === void 0 ? void 0 : options.append_to_response) === null || _a === void 0 ? void 0 : _a.appendSeasons)) {
+            if (!((_a = options === null || options === void 0 ? void 0 : options.append_to_response) === null || _a === void 0 ? void 0 : _a.appendSeasons)) {
                 return show;
             }
             if (((_b = options === null || options === void 0 ? void 0 : options.append_to_response) === null || _b === void 0 ? void 0 : _b.appendSeasons) === 'all') {
-                options.append_to_response.appendSeasons = (_d = (_c = show.data) === null || _c === void 0 ? void 0 : _c.seasons) === null || _d === void 0 ? void 0 : _d.map(season => season.season_number);
+                options.append_to_response.appendSeasons = (_c = show === null || show === void 0 ? void 0 : show.seasons) === null || _c === void 0 ? void 0 : _c.map(season => season.season_number);
                 return this.getShow(id, options);
             }
-            const newShow = Object.assign({}, show.data);
-            const appended = Array.isArray((_e = options === null || options === void 0 ? void 0 : options.append_to_response) === null || _e === void 0 ? void 0 : _e.appendSeasons) ? (_f = options === null || options === void 0 ? void 0 : options.append_to_response) === null || _f === void 0 ? void 0 : _f.appendSeasons : [(_g = options === null || options === void 0 ? void 0 : options.append_to_response) === null || _g === void 0 ? void 0 : _g.appendSeasons];
+            const newShow = Object.assign({}, show);
+            const appended = Array.isArray((_d = options === null || options === void 0 ? void 0 : options.append_to_response) === null || _d === void 0 ? void 0 : _d.appendSeasons) ? (_e = options === null || options === void 0 ? void 0 : options.append_to_response) === null || _e === void 0 ? void 0 : _e.appendSeasons : [(_f = options === null || options === void 0 ? void 0 : options.append_to_response) === null || _f === void 0 ? void 0 : _f.appendSeasons];
             newShow.appendSeasons = appended.map(season => {
                 const temp = newShow[`season/${season}`];
                 delete newShow[`season/${season}`];
@@ -121,9 +115,7 @@ class TmDBApi {
                     return temp;
                 }
             }).filter(season => season);
-            return {
-                data: newShow
-            };
+            return Object.assign({}, newShow);
         });
     }
     getMedia(id, library, options) {
@@ -134,10 +126,7 @@ class TmDBApi {
                 case 'SHOW':
                     return yield this.getShow(id, options);
                 default:
-                    return {
-                        error: 'Invalid library type',
-                        code: 400
-                    };
+                    throw new Error('Invalid library type');
             }
         });
     }
@@ -549,23 +538,18 @@ class TmDBApi {
     }
     _getProvider(data, options) {
         data = this._getDateObject(data);
-        if ((0, response_1.hasError)(data) || !options || !('watch_providers' in options)) {
+        if (!options || !('watch_providers' in options)) {
             return data;
         }
-        const newResponse = Object.assign({}, data.data);
+        const newResponse = Object.assign({}, data);
         const watchProviders = newResponse['watch/providers'];
         delete newResponse['watch/providers'];
         if (watchProviders) {
             newResponse.watch_providers = watchProviders;
         }
-        return {
-            data: newResponse
-        };
+        return Object.assign({}, newResponse);
     }
     _getDateObject(data) {
-        if ((0, response_1.hasError)(data)) {
-            return data;
-        }
         return (0, helpers_1.createDates)(data);
     }
     _getSearchType(type) {

@@ -1,4 +1,3 @@
-import {TMDBResponse} from "./response";
 
 type Method = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'HEAD' | 'OPTIONS';
 type PrimitiveType = string | number | boolean | null | undefined;
@@ -40,7 +39,7 @@ function getQueryString(url: URL, query?: Query): URL {
     return url;
 }
 
-export function makeRequest<DataType>(request: Request): Promise<TMDBResponse<DataType>> {
+export function makeRequest<DataType>(request: Request): Promise<DataType> {
     let body: string | undefined;
     const {method, headers, query, address} = request;
     const url = getQueryString(new URL(address), query);
@@ -49,16 +48,13 @@ export function makeRequest<DataType>(request: Request): Promise<TMDBResponse<Da
         body = JSON.stringify(request.body);
     }
 
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
         let address: string = '';
         let fetch = request.fetch ?? window.fetch;
         try {
             address = url.toString();
-        } catch (e: any) {
-            resolve({
-                error: e.message,
-                code: 500
-            })
+        } catch (e) {
+            reject(e);
         }
 
         fetch(address, {
@@ -70,30 +66,18 @@ export function makeRequest<DataType>(request: Request): Promise<TMDBResponse<Da
             .then(async response => {
                 try {
                     const json = await response.json();
-                    resolve({
-                        data: json,
-                        code: response.status
-                    });
+                    resolve(json as DataType);
                 } catch (e) {
                     try {
                         const text = await response.text();
-                        resolve({
-                            data: text as DataType,
-                            code: response.status
-                        });
+                        resolve(text as unknown as DataType);
                     } catch (e: any) {
-                        resolve({
-                            error: e.message,
-                            code: response.status
-                        });
+                        reject(e);
                     }
                 }
             })
             .catch((e) => {
-                resolve({
-                    error: e.message,
-                    code: 500
-                })
+                reject(e);
             });
     });
 }

@@ -1,9 +1,11 @@
 type ReplaceWhenTrue<FirstObject, SecondObject> = Pick<SecondObject, {
-    [Prop in keyof FirstObject]: Prop extends keyof SecondObject ? FirstObject[Prop] extends true ? Prop : never : never;
+    [Prop in keyof FirstObject]: Prop extends keyof SecondObject ? FirstObject[Prop] extends true ? Prop : never : never
 }[keyof FirstObject]>;
+
 type ReplaceWhenTruthy<FirstObject, SecondObject> = Pick<SecondObject, {
-    [Prop in keyof FirstObject]: Prop extends keyof SecondObject ? FirstObject[Prop] extends false | null | undefined | '' ? never : Prop : never;
+    [Prop in keyof FirstObject]: Prop extends keyof SecondObject ? FirstObject[Prop] extends false | null | undefined | '' ? never : Prop : never
 }[keyof FirstObject]>;
+
 export interface AppendToMovie {
     videos?: boolean;
     credits?: boolean;
@@ -21,10 +23,12 @@ export interface AppendToMovie {
     collection?: boolean;
     watch_providers?: boolean;
 }
+
 export interface Data {
     name: string;
     overview: string;
 }
+
 export interface Translation {
     iso_3166_1: string;
     iso_639_1: string;
@@ -32,50 +36,59 @@ export interface Translation {
     english_name: string;
     data: Data;
 }
-interface Result<ResultType> {
+
+export interface Result<ResultType> {
     page: number;
     results: ResultType[];
     total_pages: number;
     total_results: number;
 }
-interface ProviderOption {
+
+export interface ProviderOption {
     logo_path: string;
     provider_id: number;
     provider_name: string;
     display_priority: number;
 }
-interface CountryProviderOptions {
+
+export interface CountryProviderOptions {
     buy?: ProviderOption[];
     flatrate?: ProviderOption[];
     rent?: ProviderOption[];
     link: string;
 }
-interface BelongsToCollection {
+
+export interface BelongsToCollection {
     id: number;
     name: string;
     poster_path: string;
     backdrop_path: string;
 }
-interface Genre {
+
+export interface Genre {
     id: number;
     name: string;
 }
-interface ProductionCompany {
+
+export interface ProductionCompany {
     id: number;
     logo_path: string;
     name: string;
     origin_country: string;
 }
-interface ProductionCountry {
+
+export interface ProductionCountry {
     iso_3166_1: string;
     name: string;
 }
-interface SpokenLanguage {
+
+export interface SpokenLanguage {
     english_name: string;
     iso_639_1: string;
     name: string;
 }
-interface Video {
+
+export interface Video {
     iso_639_1: string;
     iso_3166_1: string;
     name: string;
@@ -87,10 +100,12 @@ interface Video {
     published_at: Date;
     id: string;
 }
-interface AppendedVideos {
+
+export interface AppendedVideos {
     results: Video[];
 }
-interface Cast {
+
+export interface Cast {
     adult: boolean;
     gender: number;
     id: number;
@@ -104,7 +119,8 @@ interface Cast {
     credit_id: string;
     order: number;
 }
-interface Crew {
+
+export interface Crew {
     adult: boolean;
     gender: number;
     id: number;
@@ -117,11 +133,13 @@ interface Crew {
     department: string;
     job: string;
 }
-interface AppendedCredits {
+
+export interface AppendedCredits {
     cast: Cast[];
     crew: Crew[];
 }
-interface MiniMovie {
+
+export interface MiniMovie {
     adult: boolean;
     backdrop_path: string;
     genre_ids: number[];
@@ -137,7 +155,8 @@ interface MiniMovie {
     vote_average: number;
     vote_count: number;
 }
-interface MiniTVShow {
+
+export interface MiniTVShow {
     adult: boolean;
     backdrop_path: string;
     genre_ids: number[];
@@ -153,7 +172,8 @@ interface MiniTVShow {
     vote_average: number;
     vote_count: number;
 }
-interface Change {
+
+export interface Change {
     id: string;
     action: string;
     time: Date;
@@ -161,7 +181,8 @@ interface Change {
     value: string;
     original_value: string;
 }
-interface Image {
+
+export interface Image {
     aspect_ratio: number;
     file_path: string;
     height: number;
@@ -170,32 +191,38 @@ interface Image {
     vote_count: number;
     width: number;
 }
+
 export interface AppendedImages {
     backdrops: Image[];
     posters: Image[];
     logos: Image[];
 }
-interface Keyword {
+
+export interface Keyword {
     id: number;
     name: string;
 }
-interface ReleaseDate {
+
+export interface ReleaseDate {
     certification: string;
     iso_639_1: string;
     note: string;
     release_date: Date;
     type: number;
 }
-interface ReleaseDatesResults {
+
+export interface ReleaseDatesResults {
     iso_3166_1: string;
     release_dates: ReleaseDate[];
 }
-interface ContentRatingsResult {
+
+export interface ContentRatingsResult {
     descriptors: any[];
     iso_3166_1: string;
     rating: string;
 }
-interface Review {
+
+export interface Review {
     author: string;
     author_details: {
         name: string;
@@ -209,7 +236,8 @@ interface Review {
     updated_at: Date;
     url: string;
 }
-interface ListItem {
+
+export interface ListItem {
     description: string;
     favorite_count: number;
     id: number;
@@ -218,28 +246,35 @@ interface ListItem {
     list_type: string;
     name: string;
     poster_path: null | string;
+
 }
-interface AppendedKeywords {
+
+export interface AppendedKeywords {
     results: Keyword[];
 }
-interface AppendedExternalIds {
+
+export interface AppendedExternalIds {
     imdb_id: string;
     wikidata_id?: any;
     facebook_id: string;
     instagram_id: string;
     twitter_id: string;
 }
-interface AppendedContentRatings {
+
+export interface AppendedContentRatings {
     results: ContentRatingsResult[];
 }
-interface AppendedReleaseDates {
+
+export interface AppendedReleaseDates {
     results: ReleaseDatesResults[];
 }
-interface AlternativeTitle {
+
+export interface AlternativeTitle {
     iso_3166_1: string;
     title: Date;
     type: string;
 }
+
 export interface Collection {
     id: number;
     name: string;
@@ -249,6 +284,7 @@ export interface Collection {
     parts: MiniMovie[];
     images: AppendedImages;
 }
+
 export interface BaseMovie {
     adult: boolean;
     backdrop_path: string;
@@ -276,21 +312,15 @@ export interface BaseMovie {
     vote_average: number;
     vote_count: number;
 }
-type AppendedReviews = Result<Review>;
-type AppendedLists = Result<ListItem>;
-type Provider = Record<string, CountryProviderOptions>;
-type AppendedAlternativeTitles = {
-    titles: AlternativeTitle[];
-};
-type AppendedMovieRecommendations = Result<MiniMovie>;
-type AppendedMovieSimilar = Result<MiniMovie>;
-type AppendedChanges = Result<Change>;
-interface AppendedTranslations {
+
+export interface AppendedTranslations {
     translations: Translation[];
 }
-interface AppendedProviders {
+
+export interface AppendedProviders {
     results: Provider;
 }
+
 export interface AppendedMovie {
     videos: AppendedVideos;
     credits: AppendedCredits;
@@ -308,12 +338,13 @@ export interface AppendedMovie {
     collection: Collection | null;
     watch_providers: AppendedProviders;
 }
+
 export interface MovieOptions<Type = AppendToMovie> {
     language?: string;
     append_to_response?: Type;
     include_image_language?: string | string[];
 }
-export type Movie<Type = AppendToMovie> = BaseMovie & ReplaceWhenTrue<Type, AppendedMovie>;
+
 export interface AppendToShow {
     videos?: boolean;
     credits?: boolean;
@@ -328,7 +359,8 @@ export interface AppendToShow {
     content_ratings?: boolean;
     translations?: boolean;
 }
-interface MicroEpisode {
+
+export interface MicroEpisode {
     id: number;
     name: string;
     overview: string;
@@ -342,7 +374,8 @@ interface MicroEpisode {
     show_id: number;
     still_path: string;
 }
-interface BaseEpisode {
+
+export interface BaseEpisode {
     air_date: Date;
     episode_number: number;
     id: number;
@@ -358,7 +391,8 @@ interface BaseEpisode {
     crew: Crew[];
     guest_stars: Cast[];
 }
-interface BaseSeason {
+
+export interface BaseSeason {
     _id: string;
     air_date: Date;
     episodes: BaseEpisode[];
@@ -367,7 +401,8 @@ interface BaseSeason {
     poster_path: string;
     season_number: number;
 }
-interface MiniSeason {
+
+export interface MiniSeason {
     air_date: Date;
     episode_count: number;
     id: number;
@@ -376,14 +411,16 @@ interface MiniSeason {
     poster_path: string;
     season_number: number;
 }
-interface CreatedBy {
+
+export interface CreatedBy {
     id: number;
     credit_id: string;
     name: string;
     gender: number;
     profile_path: string;
 }
-interface BaseTVShow {
+
+export interface BaseTVShow {
     adult: boolean;
     backdrop_path: string;
     created_by: CreatedBy[];
@@ -417,9 +454,8 @@ interface BaseTVShow {
     vote_average: number;
     vote_count: number;
 }
-type AppendedTVShowRecommendations = Result<MiniMovie>;
-type AppendedTVShowSimilar = Result<MiniMovie>;
-interface AppendedTVShow {
+
+export interface AppendedTVShow {
     videos: AppendedVideos;
     credits: AppendedCredits;
     recommendations: AppendedTVShowRecommendations;
@@ -433,12 +469,13 @@ interface AppendedTVShow {
     content_ratings: AppendedContentRatings;
     translations: AppendedTranslations;
 }
+
 export interface TVShowOptions<Type extends AppendToShow> {
     language?: string;
     append_to_response?: Type;
     include_image_language?: string | string[];
 }
-export type TVShow<Type extends AppendToShow> = BaseTVShow & ReplaceWhenTruthy<Type, AppendedTVShow>;
+
 export interface AppendToSeason {
     videos?: boolean;
     credits?: boolean;
@@ -447,7 +484,8 @@ export interface AppendToSeason {
     translations?: boolean;
     watch_providers?: boolean;
 }
-interface AppendedSeason {
+
+export interface AppendedSeason {
     videos: AppendedVideos;
     credits: AppendedCredits;
     images: AppendedImages;
@@ -455,12 +493,13 @@ interface AppendedSeason {
     translations: AppendedTranslations;
     watch_providers: AppendedProviders;
 }
+
 export interface SeasonOptions<Type extends AppendToSeason> {
     language?: string;
     append_to_response?: Type;
     include_image_language?: string | string[];
 }
-export type Season<Type extends AppendToSeason> = BaseSeason & ReplaceWhenTrue<Type, AppendedSeason>;
+
 export interface AppendToEpisode {
     videos?: boolean;
     credits?: boolean;
@@ -469,22 +508,24 @@ export interface AppendToEpisode {
     translations?: boolean;
     watch_providers?: boolean;
 }
-interface AppendedEpisode {
+
+export interface AppendedEpisode {
     videos: AppendedVideos;
     credits: AppendedCredits;
     images: {
         stills: Image[];
-    };
+    }
     external_ids: AppendedExternalIds;
     translations: AppendedTranslations;
     watch_providers: AppendedProviders;
 }
+
 export interface EpisodeOptions<Type extends AppendToEpisode> {
     language?: string;
     append_to_response?: Type;
     include_image_language?: string | string[];
 }
-export type Episode<Type extends AppendToEpisode> = BaseEpisode & ReplaceWhenTrue<Type, AppendedEpisode>;
+
 export interface AppendToPerson {
     movie_credits?: boolean;
     tv_credits?: boolean;
@@ -494,7 +535,8 @@ export interface AppendToPerson {
     tagged_images?: boolean;
     changes?: boolean;
 }
-interface KnownFor {
+
+export interface KnownFor {
     adult: boolean;
     backdrop_path: string;
     id: number;
@@ -511,7 +553,8 @@ interface KnownFor {
     vote_average: number;
     vote_count: number;
 }
-interface MiniPerson {
+
+export interface MiniPerson {
     adult: boolean;
     gender: number;
     id: number;
@@ -522,14 +565,15 @@ interface MiniPerson {
     profile_path: string;
     known_for: KnownFor[];
 }
-interface AppendedPersonExternalIds {
+
+export interface AppendedPersonExternalIds {
     imdb_id: string;
     facebook_id: string;
     instagram_id: string;
     twitter_id: string;
 }
-type AppendedTaggedImages = Result<Image>;
-interface AppendedPerson {
+
+export interface AppendedPerson {
     movie_credits: AppendedCredits;
     tv_credits: AppendedCredits;
     combined_credits: AppendedCredits;
@@ -538,7 +582,8 @@ interface AppendedPerson {
     tagged_images: AppendedTaggedImages;
     changes: AppendedChanges;
 }
-interface BasePerson {
+
+export interface BasePerson {
     adult: boolean;
     also_known_as: string[];
     biography: string;
@@ -554,12 +599,13 @@ interface BasePerson {
     popularity: number;
     profile_path: string;
 }
+
 export interface PersonOptions<Type extends AppendToPerson> {
     language?: string;
     append_to_response?: Type;
     include_image_language?: string | string[];
 }
-export type Person<Type extends AppendToPerson> = BasePerson & ReplaceWhenTrue<Type, AppendedPerson>;
+
 export interface Company {
     description: string;
     headquarters: string;
@@ -588,8 +634,7 @@ export interface Company {
         }>;
     };
 }
-export type LibraryType = 'MOVIE' | 'SHOW' | 'PERSON';
-export type LibraryResultType<Type extends LibraryType> = Type extends 'MOVIE' ? MiniMovie : Type extends 'SHOW' ? MiniTVShow : Type extends 'PERSON' ? MiniPerson : never;
+
 export interface SearchOptions<Type extends LibraryType> {
     language?: string;
     page?: number;
@@ -600,33 +645,33 @@ export interface SearchOptions<Type extends LibraryType> {
     primary_release_year?: number;
     first_air_date_year?: number;
 }
-export type SearchResult<Type extends LibraryType> = Result<LibraryResultType<Type>>;
+
 export interface UpcomingMoviesOptions {
     language?: string;
     page?: number;
     region?: string;
 }
-export type UpcomingMovies = Result<MiniMovie>;
+
 export interface NowPlayingMoviesOptions {
     language?: string;
     page?: number;
     region?: string;
 }
-export type NowPlayingMovies = Result<MiniMovie>;
+
 export interface PopularMediaOptions<Type extends LibraryType> {
     language?: string;
     page?: number;
     region?: string;
     library_type?: Type;
 }
-export type PopularMedia<Type extends LibraryType> = Result<LibraryResultType<Type>>;
+
 export interface TopRatedMediaOptions<Type extends LibraryType> {
     language?: string;
     page?: number;
     region?: string;
     library_type?: Type;
 }
-export type TopRatedMedia<Type extends LibraryType> = Result<LibraryResultType<Type>>;
+
 export interface TrendingMediaOptions<Type extends LibraryType> {
     language?: string;
     page?: number;
@@ -634,32 +679,38 @@ export interface TrendingMediaOptions<Type extends LibraryType> {
     library_type?: Type;
     time_window?: 'day' | 'week';
 }
-export type TrendingMedia<Type extends LibraryType> = Result<LibraryResultType<Type>>;
+
 export interface AiringShowsOptions {
     language?: string;
     page?: number;
     timezone?: string;
     time_window?: 'airing_today' | 'on_the_air';
 }
-export type AiringShows = Result<MiniTVShow>;
+
 export interface KeywordOptions<Type extends LibraryType> {
     language?: string;
     page?: number;
     library_type?: Type;
 }
-export type KeywordResult<Type extends LibraryType> = Result<LibraryResultType<Type>>;
+
 export interface RecommendationsOptions<Type extends LibraryType> {
     language?: string;
     page?: number;
     library_type?: Type;
 }
-export type Recommendations<Type extends LibraryType> = Result<LibraryResultType<Type>>;
+
+export interface MediaOptions<Type extends LibraryType, Append extends AppendToMedia<Type>> {
+    language?: string;
+    append_to_response?: Append;
+    include_image_language?: string | string[];
+}
+
 export interface SimilarOptions<Type extends LibraryType> {
     language?: string;
     page?: number;
     library_type?: Type;
 }
-export type Similar<Type extends LibraryType> = Result<LibraryResultType<Type>>;
+
 export interface DiscoverParams {
     region?: string;
     sort_by?: DiscoverSortBy;
@@ -692,19 +743,228 @@ export interface DiscoverParams {
     with_runtime_lte?: number;
     with_original_language?: string;
 }
-type DiscoverSortBy = 'popularity.asc' | 'popularity.desc' | 'release_date.asc' | 'release_date.desc' | 'revenue.asc' | 'revenue.desc' | 'primary_release_date.asc' | 'primary_release_date.desc' | 'original_title.asc' | 'original_title.desc' | 'vote_average.asc' | 'vote_average.desc' | 'vote_count.asc' | 'vote_count.desc';
+
 export interface DiscoverOptions<Type extends LibraryType> {
     library_type?: Type;
     language?: string;
     page?: number;
     params?: DiscoverParams;
 }
-export type Discover<Type extends LibraryType> = Result<LibraryResultType<Type>>;
-export type AppendToMedia<Type extends LibraryType> = Type extends 'MOVIE' ? AppendToMovie : Type extends 'SHOW' ? AppendToShow : never;
-export type Media<Type extends LibraryType, Append extends AppendToMedia<Type>> = Type extends 'MOVIE' ? Movie<Append> : Type extends 'SHOW' ? TVShow<Append> : never;
-export interface MediaOptions<Type extends LibraryType, Append extends AppendToMedia<Type>> {
-    language?: string;
-    append_to_response?: Append;
-    include_image_language?: string | string[];
+
+export type LibraryType = 'MOVIE' | 'SHOW' | 'PERSON';
+
+export type AppendedReviews = Result<Review>;
+
+export type AppendedLists = Result<ListItem>;
+
+export type Provider = Record<string, CountryProviderOptions>;
+
+export type AppendedAlternativeTitles = {
+    titles: AlternativeTitle[];
 }
-export {};
+
+export type AppendedMovieRecommendations = Result<MiniMovie>;
+
+export type AppendedMovieSimilar = Result<MiniMovie>;
+
+export type AppendedChanges = Result<Change>;
+
+export type AppendedTVShowRecommendations = Result<MiniMovie>;
+
+export type AppendedTVShowSimilar = Result<MiniMovie>;
+
+export type TVShow<Type extends AppendToShow> = BaseTVShow & ReplaceWhenTruthy<Type, AppendedTVShow>;
+
+export type Season<Type extends AppendToSeason> = BaseSeason & ReplaceWhenTrue<Type, AppendedSeason>;
+
+export type Episode<Type extends AppendToEpisode> = BaseEpisode & ReplaceWhenTrue<Type, AppendedEpisode>;
+
+export type Person<Type extends AppendToPerson> = BasePerson & ReplaceWhenTrue<Type, AppendedPerson>;
+
+export type Movie<Type = AppendToMovie> = BaseMovie & ReplaceWhenTrue<Type, AppendedMovie>;
+
+export type LibraryResultType<Type extends LibraryType> = Type extends 'MOVIE' ? MiniMovie : Type extends 'SHOW' ? MiniTVShow : Type extends 'PERSON' ? MiniPerson : never;
+
+export type SearchResult<Type extends LibraryType> = Result<LibraryResultType<Type>>;
+
+export type NowPlayingMovies = Result<MiniMovie>;
+
+export type UpcomingMovies = Result<MiniMovie>;
+
+export type AiringShows = Result<MiniTVShow>;
+
+export type AppendedTaggedImages = Result<Image>;
+
+export type TopRatedMedia<Type extends LibraryType> = Result<LibraryResultType<Type>>;
+
+export type PopularMedia<Type extends LibraryType> = Result<LibraryResultType<Type>>;
+
+export type TrendingMedia<Type extends LibraryType> = Result<LibraryResultType<Type>>;
+
+export type KeywordResult<Type extends LibraryType> = Result<LibraryResultType<Type>>;
+
+export type Recommendations<Type extends LibraryType> = Result<LibraryResultType<Type>>;
+
+export type Similar<Type extends LibraryType> = Result<LibraryResultType<Type>>;
+
+export type DiscoverSortBy = 'popularity.asc' | 'popularity.desc' | 'release_date.asc' | 'release_date.desc' | 'revenue.asc' | 'revenue.desc' | 'primary_release_date.asc' | 'primary_release_date.desc' | 'original_title.asc' | 'original_title.desc' | 'vote_average.asc' | 'vote_average.desc' | 'vote_count.asc' | 'vote_count.desc';
+
+export type Discover<Type extends LibraryType> = Result<LibraryResultType<Type>>;
+
+export type AppendToMedia<Type extends LibraryType> = Type extends 'MOVIE' ? AppendToMovie : Type extends 'SHOW' ? AppendToShow : never;
+
+export type Media<Type extends LibraryType, Append extends AppendToMedia<Type>> =
+    Type extends 'MOVIE' ? Movie<Append> :
+        Type extends 'SHOW' ? TVShow<Append> :
+            never;
+
+export type FetchType = typeof fetch;
+
+export declare class TmDBApi {
+
+    /**
+     * Creates an instance of TmDBApi.
+     * @param apiKey - The API key for the TMDb API
+     * @param fetch - The fetch function to use for requests (optional)
+     * @param baseUrl - The base URL for the TMDb API (optional)
+     */
+    constructor(apiKey: string, fetch?: FetchType, baseUrl?: string);
+
+    /**
+     * Get a collection by id.
+     * @param id - The collection id
+     * @param language - The language to use for the request (optional)
+     */
+    getCollection(id?: number, language?: string): Promise<Collection>;
+
+    /**
+     * Get a Movie by id.
+     * @param id - The movie id
+     * @param options - The options to use for the request includes the append_to_response and language (optional)
+     */
+    getMovie<Append extends AppendToMovie>(id: number, options?: MovieOptions<Append>): Promise<Movie<Append>>;
+
+    /**
+     * Get a TV Show by id.
+     * @param id - The show id
+     * @param options - The options to use for the request includes the append_to_response and language (optional)
+     */
+    getShow<Append extends AppendToShow>(id: number, options?: TVShowOptions<Append>): Promise<TVShow<Append>>;
+
+    /**
+     * Gets a media item by id. Can be a Movie, TV Show or Person.
+     * @param id - The media id
+     * @param library - The library type
+     * @param options - The options to use for the request includes the append_to_response and language (optional)
+     */
+    getMedia<Library extends LibraryType, Append extends AppendToMedia<Library>>(id: number, library: Library, options?: MediaOptions<Library, Append>): Promise<Media<Library, Append>>;
+
+    /**
+     * Get a Season by Show id and Season number.
+     * @param id - The show id
+     * @param seasonNumber - The season number
+     * @param options - The options to use for the request includes the append_to_response and language (optional)
+     */
+    getSeason<Append extends AppendToSeason>(id: number, seasonNumber: number, options?: SeasonOptions<Append>): Promise<Season<Append>>;
+
+    /**
+     * Get an Episode by Show id, Season number and Episode number.
+     * @param id - The show id
+     * @param seasonNumber - The season number
+     * @param episodeNumber - The episode number
+     * @param options - The options to use for the request includes the append_to_response and language (optional)
+     */
+    getEpisode<Append extends AppendToEpisode>(id: number, seasonNumber: number, episodeNumber: number, options?: EpisodeOptions<Append>): Promise<Episode<Append>>;
+
+    /**
+     * Get a Person by id.
+     * @param id - The person id
+     * @param options - The options to use for the request includes the append_to_response and language (optional)
+     */
+    getPerson<Append extends AppendToPerson>(id: number, options?: PersonOptions<Append>): Promise<Person<Append>>;
+
+    /**
+     * Get a Company by id.
+     * @param id - The company id
+     * @param language - The language to use for the request (optional)
+     */
+    getCompany(id: number, language?: string): Promise<Company>;
+
+    /**
+     * Get a Network by id.
+     * @param id - The network id
+     * @param language - The language to use for the request (optional)
+     */
+    getNetwork(id: number, language?: string): Promise<Company>;
+
+    /**
+     * Search for a Movie, TV Show or Person.
+     * @param query - The query to search for
+     * @param options - The options to use for the request includes the library_type, language, page, include_adult, region, year, primary_release_year and first_air_date_year (optional)
+     */
+    searchTmDB<Library extends LibraryType>(query: string, options?: SearchOptions<Library>): Promise<SearchResult<Library>>;
+
+    /**
+     * Get the Upcoming Movies.
+     * @param options - The options to use for the request includes the language, page and region (optional)
+     */
+    getUpcomingMovies(options?: UpcomingMoviesOptions): Promise<UpcomingMovies>;
+
+    /**
+     * Get the Now Playing Movies.
+     * @param options - The options to use for the request includes the language, page and region (optional)
+     */
+    getNowPlayingMovies(options?: NowPlayingMoviesOptions): Promise<NowPlayingMovies>;
+
+    /**
+     * Get the Popular Media.
+     * @param options - The options to use for the request includes the library_type, language, page and region (optional)
+     */
+    getPopularMedia<Library extends LibraryType>(options?: PopularMediaOptions<Library>): Promise<PopularMedia<Library>>;
+
+    /**
+     * Get the Top Rated Media.
+     * @param options - The options to use for the request includes the library_type, language, page and region (optional)
+     */
+    getTopRatedMedia<Library extends LibraryType>(options?: TopRatedMediaOptions<Library>): Promise<TopRatedMedia<Library>>;
+
+    /**
+     * Get the Trending Media.
+     * @param options - The options to use for the request includes the library_type, language, page, region and time_window (optional)
+     */
+    getTrendingMedia<Library extends LibraryType>(options?: TrendingMediaOptions<Library>): Promise<TrendingMedia<Library>>;
+
+    /**
+     * Get the Airing Shows.
+     * @param options - The options to use for the request includes the language, page, timezone and time_window (optional)
+     */
+    getAiringShows(options?: AiringShowsOptions): Promise<AiringShows>;
+
+    /**
+     * Get the Media by keyword.
+     * @param id - The keyword id
+     * @param options - The options to use for the request includes the library_type, language and page (optional)
+     */
+    getByKeyword<Library extends LibraryType>(id: number, options?: KeywordOptions<Library>): Promise<KeywordResult<Library>>;
+
+    /**
+     * Get the Recommendations for a media item.
+     * @param id - The media id
+     * @param options - The options to use for the request includes the language and page (optional)
+     */
+    getRecommendations<Library extends LibraryType>(id: number, options?: RecommendationsOptions<Library>): Promise<Recommendations<Library>>;
+
+    /**
+     * Get the Similar media items.
+     * @param id - The media id
+     * @param options - The options to use for the request includes the language and page (optional)
+     */
+    getSimilar<Library extends LibraryType>(id: number, options?: SimilarOptions<Library>): Promise<Similar<Library>>;
+
+    /**
+     * Discover Media.
+     * @param options - The options to use for the request includes the library_type, language, page, region, sort_by, certification_country, certification, certification_lte, certification_gte, include_adult, include_video, primary_release_year, primary_release_date_gte, primary_release_date_lte, release_date_gte, release_date_lte, with_release_type, year, vote_count_gte, vote_count_lte, vote_average_gte, vote_average_lte, with_cast, with_crew, with_people, with_companies, with_genres, without_genres
+     */
+    discoverMedia<Library extends LibraryType>(options?: DiscoverOptions<Library>): Promise<Discover<Library>>;
+
+}
