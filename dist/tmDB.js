@@ -70,10 +70,10 @@ class TmDBApi {
             };
             const data = yield (0, request_1.makeRequest)(request);
             const movie = this._getProvider(data, options === null || options === void 0 ? void 0 : options.append_to_response);
-            if (!((_a = options === null || options === void 0 ? void 0 : options.append_to_response) === null || _a === void 0 ? void 0 : _a.collection)) {
+            if (!((_a = options === null || options === void 0 ? void 0 : options.append_to_response) === null || _a === void 0 ? void 0 : _a.collection) || !((_b = movie === null || movie === void 0 ? void 0 : movie.belongs_to_collection) === null || _b === void 0 ? void 0 : _b.id)) {
                 return movie;
             }
-            const collection = yield this.getCollection((_b = movie === null || movie === void 0 ? void 0 : movie.belongs_to_collection) === null || _b === void 0 ? void 0 : _b.id);
+            const collection = yield this.getCollection(movie.belongs_to_collection.id);
             const newMovie = Object.assign(Object.assign({}, movie), { collection: collection !== null && collection !== void 0 ? collection : null });
             return Object.assign({}, newMovie);
         });

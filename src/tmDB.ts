@@ -94,11 +94,11 @@ export class TmDBApi {
 
         const data = await makeRequest<Movie<Append>>(request);
         const movie = this._getProvider(data, options?.append_to_response);
-        if (!options?.append_to_response?.collection) {
+        if (!options?.append_to_response?.collection || !movie?.belongs_to_collection?.id) {
             return movie;
         }
 
-        const collection = await this.getCollection(movie?.belongs_to_collection?.id);
+        const collection = await this.getCollection(movie.belongs_to_collection.id);
         const newMovie = {
             ...movie,
             collection: collection ?? null
