@@ -27,7 +27,7 @@ import {
     UpcomingMovies,
     UpcomingMoviesOptions
 } from "../types";
-import {createDates} from "./helpers";
+import {createDates, groupByLength} from "./helpers";
 
 export class TmDBApi {
     private readonly _apiKey: string;
@@ -135,9 +135,19 @@ export class TmDBApi {
         }
 
         if (options?.append_to_response?.appendSeasons === 'all') {
-            options.append_to_response.appendSeasons = show?.seasons?.
-                map(season => season.season_number);
-            return this.getShow(id, options);
+            const seasons = groupByLength(show.seasons.map(season => season.season_number), 20);
+            const seasonPromises = seasons.map(season => this.getShow(id, {
+                ...options,
+                append_to_response: {
+                    appendSeasons: season
+                }
+            }));
+            const seasonData = await Promise.all(seasonPromises);
+            const appendSeasons = seasonData.map(season => season.appendSeasons).flat();
+            return {
+                ...show,
+                appendSeasons
+            }
         }
 
         const newShow: any = {...show};

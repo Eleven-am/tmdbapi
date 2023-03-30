@@ -17,3 +17,12 @@ export function createDates<DataType>(data: DataType) {
     return obj;
 }
 
+export function groupByLength<DataType>(arr: DataType[], length: number) {
+    const groups = [];
+    let i = 0;
+    while (i < arr.length) {
+        groups.push(arr.slice(i, i += length));
+    }
+
+    return groups;
+}
