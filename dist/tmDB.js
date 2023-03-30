@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TmDBApi = void 0;
 const request_1 = require("./request");
-const helpers_1 = require("./helpers");
+const helpers_1 = require("../src/helpers");
 class TmDBApi {
     /**
      * Creates an instance of TmDBApi.
@@ -84,7 +84,7 @@ class TmDBApi {
      * @param options - The options to use for the request includes the append_to_response and language (optional)
      */
     getShow(id, options) {
-        var _a, _b, _c, _d, _e, _f;
+        var _a, _b, _c, _d, _e;
         return __awaiter(this, void 0, void 0, function* () {
             const params = {
                 api_key: this._apiKey,
@@ -103,11 +103,16 @@ class TmDBApi {
                 return show;
             }
             if (((_b = options === null || options === void 0 ? void 0 : options.append_to_response) === null || _b === void 0 ? void 0 : _b.appendSeasons) === 'all') {
-                options.append_to_response.appendSeasons = (_c = show === null || show === void 0 ? void 0 : show.seasons) === null || _c === void 0 ? void 0 : _c.map(season => season.season_number);
-                return this.getShow(id, options);
+                const seasons = (0, helpers_1.groupByLength)(show.seasons.map(season => season.season_number), 20);
+                const seasonPromises = seasons.map(season => this.getShow(id, Object.assign(Object.assign({}, options), { append_to_response: {
+                        appendSeasons: season
+                    } })));
+                const seasonData = yield Promise.all(seasonPromises);
+                const appendSeasons = seasonData.map(season => season.appendSeasons).flat();
+                return Object.assign(Object.assign({}, show), { appendSeasons });
             }
             const newShow = Object.assign({}, show);
-            const appended = Array.isArray((_d = options === null || options === void 0 ? void 0 : options.append_to_response) === null || _d === void 0 ? void 0 : _d.appendSeasons) ? (_e = options === null || options === void 0 ? void 0 : options.append_to_response) === null || _e === void 0 ? void 0 : _e.appendSeasons : [(_f = options === null || options === void 0 ? void 0 : options.append_to_response) === null || _f === void 0 ? void 0 : _f.appendSeasons];
+            const appended = Array.isArray((_c = options === null || options === void 0 ? void 0 : options.append_to_response) === null || _c === void 0 ? void 0 : _c.appendSeasons) ? (_d = options === null || options === void 0 ? void 0 : options.append_to_response) === null || _d === void 0 ? void 0 : _d.appendSeasons : [(_e = options === null || options === void 0 ? void 0 : options.append_to_response) === null || _e === void 0 ? void 0 : _e.appendSeasons];
             newShow.appendSeasons = appended.map(season => {
                 const temp = newShow[`season/${season}`];
                 delete newShow[`season/${season}`];

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createDates = void 0;
+exports.groupByLength = exports.createDates = void 0;
 function createDates(data) {
     let obj = data;
     for (let key in obj) {
@@ -21,3 +21,12 @@ function createDates(data) {
     return obj;
 }
 exports.createDates = createDates;
+function groupByLength(arr, length) {
+    const groups = [];
+    let i = 0;
+    while (i < arr.length) {
+        groups.push(arr.slice(i, i += length));
+    }
+    return groups;
+}
+exports.groupByLength = groupByLength;
