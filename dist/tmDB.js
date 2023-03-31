@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TmDBApi = void 0;
 const request_1 = require("./request");
-const helpers_1 = require("../src/helpers");
+const helpers_1 = require("./helpers");
 class TmDBApi {
     /**
      * Creates an instance of TmDBApi.
