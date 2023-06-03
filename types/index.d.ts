@@ -146,7 +146,12 @@ interface CreditCrewDetails {
     job: string;
 }
 
-export interface AppendedCredits<Type> {
+export interface AppendedCredits {
+    cast: Cast[];
+    crew: Crew[];
+}
+
+export interface AppendedPersonCredits<Type> {
     cast: (Type & CreditCastDetails)[];
     crew: (Type & CreditCrewDetails)[];
 }
@@ -586,9 +591,9 @@ export interface AppendedPersonExternalIds {
 }
 
 export interface AppendedPerson {
-    movie_credits: AppendedCredits<MiniMovie>;
-    tv_credits: AppendedCredits<MiniTVShow>;
-    combined_credits: AppendedCredits<MiniMovie | MiniTVShow>;
+    movie_credits: AppendedPersonCredits<MiniMovie>;
+    tv_credits: AppendedPersonCredits<MiniTVShow>;
+    combined_credits: AppendedPersonCredits<MiniMovie | MiniTVShow>;
     external_ids: AppendedPersonExternalIds;
     images: AppendedImages;
     tagged_images: AppendedTaggedImages;
