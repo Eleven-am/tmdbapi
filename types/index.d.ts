@@ -751,11 +751,11 @@ export interface DiscoverParams {
     with_cast?: string;
     with_crew?: string;
     with_people?: string;
-    with_companies?: string;
-    with_genres?: string;
-    without_genres?: string;
-    with_keywords?: string;
-    without_keywords?: string;
+    with_companies?: number | number[];
+    with_genres?: number | number[];
+    without_genres?: number | number[];
+    with_keywords?: string | string[];
+    without_keywords?: string | string[];
     with_runtime_gte?: number;
     with_runtime_lte?: number;
     with_original_language?: string;
