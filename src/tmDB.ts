@@ -19,7 +19,7 @@ import {
     PersonOptions, PopularMedia,
     PopularMediaOptions, Recommendations, RecommendationsOptions,
     SearchOptions,
-    SearchResult,
+    SearchResult, SearchType,
     Season,
     SeasonOptions, Similar, SimilarOptions, TopRatedMedia, TopRatedMediaOptions, TrendingMedia, TrendingMediaOptions,
     TVShow,
@@ -608,7 +608,7 @@ export class TmDBApi {
         return createDates(data);
     }
 
-    private _getSearchType(type?: LibraryType): string {
+    private _getSearchType(type?: SearchType): string {
         switch (type) {
             case 'MOVIE':
                 return 'movie';
@@ -616,6 +616,12 @@ export class TmDBApi {
                 return 'tv';
             case 'PERSON':
                 return 'person';
+            case 'COMPANY':
+                return 'company';
+            case 'KEYWORD':
+                return 'keyword';
+            case 'COLLECTION':
+                return 'collection';
             default:
                 return 'multi';
         }

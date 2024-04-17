@@ -565,6 +565,12 @@ class TmDBApi {
                 return 'tv';
             case 'PERSON':
                 return 'person';
+            case 'COMPANY':
+                return 'company';
+            case 'KEYWORD':
+                return 'keyword';
+            case 'COLLECTION':
+                return 'collection';
             default:
                 return 'multi';
         }

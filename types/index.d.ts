@@ -302,6 +302,17 @@ export interface Collection {
     images: AppendedImages;
 }
 
+export interface MiniCollection {
+    id: number;
+    name: string;
+    adult: boolean;
+    poster_path: string;
+    backdrop_path: string;
+    original_language: string;
+    original_title: string;
+    overview: string;
+}
+
 export interface BaseMovie {
     adult: boolean;
     backdrop_path: string;
@@ -652,6 +663,13 @@ export interface Company {
     };
 }
 
+export interface MiniCompany {
+    id: number;
+    logo_path: string;
+    name: string;
+    origin_country: string;
+}
+
 export interface SearchOptions<Type extends LibraryType> {
     language?: string;
     page?: number;
@@ -770,6 +788,8 @@ export interface DiscoverOptions<Type extends LibraryType> {
 
 export type LibraryType = 'MOVIE' | 'SHOW' | 'PERSON';
 
+export type SearchType = LibraryType | 'COLLECTION' | 'COMPANY' | 'KEYWORD';
+
 export type AppendedReviews = Result<Review>;
 
 export type AppendedLists = Result<ListItem>;
@@ -800,7 +820,7 @@ export type Person<Type extends AppendToPerson> = BasePerson & ReplaceWhenTrue<T
 
 export type Movie<Type = AppendToMovie> = BaseMovie & ReplaceWhenTrue<Type, AppendedMovie>;
 
-export type LibraryResultType<Type extends LibraryType> = Type extends 'MOVIE' ? MiniMovie : Type extends 'SHOW' ? MiniTVShow : Type extends 'PERSON' ? MiniPerson : never;
+export type LibraryResultType<Type extends SearchType> = Type extends 'MOVIE' ? MiniMovie : Type extends 'SHOW' ? MiniTVShow : Type extends 'PERSON' ? MiniPerson : Type extends 'COLLECTION' ? MiniCollection : Type extends 'COMPANY' ? MiniCompany : Type extends 'KEYWORD' ? Keyword : never;
 
 export type SearchResult<Type extends LibraryType> = Result<LibraryResultType<Type>>;
 
@@ -919,7 +939,7 @@ export declare class TmDBApi {
      * @param query - The query to search for
      * @param options - The options to use for the request includes the library_type, language, page, include_adult, region, year, primary_release_year and first_air_date_year (optional)
      */
-    searchTmDB<Library extends LibraryType>(query: string, options?: SearchOptions<Library>): Promise<SearchResult<Library>>;
+    searchTmDB<Library extends SearchType>(query: string, options?: SearchOptions<Library>): Promise<SearchResult<Library>>;
 
     /**
      * Get the Upcoming Movies.
