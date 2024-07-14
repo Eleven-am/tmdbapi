@@ -276,6 +276,7 @@ export interface AppendedExternalIds {
     facebook_id: string;
     instagram_id: string;
     twitter_id: string;
+    tvdb_id?: number;
 }
 
 export interface AppendedContentRatings {
