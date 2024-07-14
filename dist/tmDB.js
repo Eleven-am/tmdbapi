@@ -55,8 +55,8 @@ class TmDBApi {
      * @param options - The options to use for the request includes the append_to_response and language (optional)
      */
     getMovie(id, options) {
-        var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
+            var _a, _b;
             const params = {
                 api_key: this._apiKey,
                 language: options === null || options === void 0 ? void 0 : options.language,
@@ -84,8 +84,8 @@ class TmDBApi {
      * @param options - The options to use for the request includes the append_to_response and language (optional)
      */
     getShow(id, options) {
-        var _a, _b, _c, _d, _e;
         return __awaiter(this, void 0, void 0, function* () {
+            var _a, _b, _c, _d, _e;
             const params = {
                 api_key: this._apiKey,
                 language: options === null || options === void 0 ? void 0 : options.language,
@@ -367,8 +367,8 @@ class TmDBApi {
      * @param options - The options to use for the request includes the library_type, language, page, region and time_window (optional)
      */
     getTrendingMedia(options) {
-        var _a;
         return __awaiter(this, void 0, void 0, function* () {
+            var _a;
             const params = {
                 api_key: this._apiKey,
                 language: options === null || options === void 0 ? void 0 : options.language,
@@ -391,8 +391,8 @@ class TmDBApi {
      * @param options - The options to use for the request includes the language, page, timezone and time_window (optional)
      */
     getAiringShows(options) {
-        var _a;
         return __awaiter(this, void 0, void 0, function* () {
+            var _a;
             const params = {
                 api_key: this._apiKey,
                 language: options === null || options === void 0 ? void 0 : options.language,

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.makeRequest = void 0;
+exports.makeRequest = makeRequest;
 function getQueryString(url, query) {
     if (!query)
         return url;
@@ -75,4 +75,3 @@ function makeRequest(request) {
         });
     });
 }
-exports.makeRequest = makeRequest;
