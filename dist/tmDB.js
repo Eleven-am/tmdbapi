@@ -10,8 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TmDBApi = void 0;
-const request_1 = require("./request");
-const helpers_1 = require("./helpers");
+const request_1 = require("./src/request");
+const helpers_1 = require("./src/helpers");
 class TmDBApi {
     /**
      * Creates an instance of TmDBApi.
@@ -491,6 +491,20 @@ class TmDBApi {
             const data = yield (0, request_1.makeRequest)(request);
             return this._getDateObject(data);
         });
+    }
+    /**
+     * Validate the API key.
+     */
+    validateKey() {
+        const request = {
+            method: 'GET',
+            address: `${this._baseUrl}/authentication`,
+            query: {
+                api_key: this._apiKey
+            },
+            fetch: this._fetch
+        };
+        return (0, request_1.makeRequest)(request);
     }
     _getAppendToResponse(options) {
         let appendToResponse = [];

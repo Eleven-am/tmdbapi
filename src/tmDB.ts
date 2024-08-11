@@ -552,6 +552,9 @@ export class TmDBApi {
         return this._getDateObject(data);
     }
 
+    /**
+     * Validate the API key.
+     */
     public validateKey() {
         const request: Request = {
             method: 'GET',
