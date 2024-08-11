@@ -5,7 +5,7 @@ import {
     AppendToMovie,
     AppendToPerson,
     AppendToSeason,
-    AppendToShow,
+    AppendToShow, AuthenticatedOptions,
     Collection,
     Company, Discover, DiscoverOptions,
     Episode,
@@ -550,6 +550,19 @@ export class TmDBApi {
 
         const data = await makeRequest<Discover<Library>>(request);
         return this._getDateObject(data);
+    }
+
+    public validateKey() {
+        const request: Request = {
+            method: 'GET',
+            address: `${this._baseUrl}/authentication`,
+            query: {
+                api_key: this._apiKey
+            },
+            fetch: this._fetch
+        }
+
+        return makeRequest<AuthenticatedOptions>(request);
     }
 
     private _getAppendToResponse(options?: AppendToMovie | AppendToShow | AppendToPerson): string[] | undefined {

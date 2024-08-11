@@ -671,6 +671,12 @@ export interface MiniCompany {
     origin_country: string;
 }
 
+export interface AuthenticatedOptions {
+    status_code: number;
+    status_message: string;
+    success: boolean;
+}
+
 export interface SearchOptions<Type extends LibraryType> {
     language?: string;
     page?: number;
@@ -1005,4 +1011,8 @@ export declare class TmDBApi {
      */
     discoverMedia<Library extends LibraryType>(options?: DiscoverOptions<Library>): Promise<Discover<Library>>;
 
+    /**
+     * Validate the API key.
+     */
+    validateKey(): Promise<AuthenticatedOptions>;
 }
