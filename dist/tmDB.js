@@ -506,6 +506,20 @@ class TmDBApi {
         };
         return (0, request_1.makeRequest)(request);
     }
+    /**
+     * Update the API key.
+     * @param apiKey - The new API key
+     */
+    updateApiKey(apiKey) {
+        this._apiKey = apiKey;
+    }
+    /**
+     * Update the fetch function.
+     * @param fetch - The new fetch function
+     */
+    updateFetch(fetch) {
+        this._fetch = fetch;
+    }
     _getAppendToResponse(options) {
         let appendToResponse = [];
         if (options === null || options === void 0 ? void 0 : options.changes)
