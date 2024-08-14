@@ -801,6 +801,12 @@ export interface DiscoverParams {
     with_original_language?: string;
 }
 
+export interface FindMediaResult {
+    movie_results: MiniMovie[];
+    tv_results: MiniTVShow[];
+    person_results: MiniPerson[];
+}
+
 export interface DiscoverOptions<Type extends LibraryType> {
     library_type?: Type;
     language?: string;
@@ -1030,7 +1036,7 @@ export declare class TmDBApi {
      * Find media by external id.
      * @param option - The options to use for the request includes the external_id, external_source and language (optional)
      */
-    findMedia(option: FindMediaOptions): Promise<MiniMovie | MiniTVShow | MiniPerson>;
+    findMedia(option: FindMediaOptions): Promise<FindMediaResult>;
 
     /**
      * Validate the API key.

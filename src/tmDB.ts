@@ -9,8 +9,8 @@ import {
     Collection,
     Company, Discover, DiscoverOptions,
     Episode,
-    EpisodeOptions, FindMediaOptions, KeywordOptions, KeywordResult,
-    LibraryType, Media, MediaOptions, MiniMovie, MiniPerson, MiniTVShow,
+    EpisodeOptions, FindMediaOptions, FindMediaResult, KeywordOptions, KeywordResult,
+    LibraryType, Media, MediaOptions,
     Movie,
     MovieOptions,
     NowPlayingMovies,
@@ -562,7 +562,7 @@ export class TmDBApi {
      * Find media by external id.
      * @param option - The options to use for the request includes the external_id, external_source and language (optional)
      */
-    public findMedia(option: FindMediaOptions): Promise<MiniMovie | MiniTVShow | MiniPerson> {
+    public findMedia(option: FindMediaOptions): Promise<FindMediaResult> {
         const params = {
             api_key: this._apiKey,
             external_source: option.external_source,
@@ -576,7 +576,7 @@ export class TmDBApi {
             fetch: this._fetch
         }
 
-        return makeRequest<MiniMovie | MiniTVShow | MiniPerson>(request);
+        return makeRequest<FindMediaResult>(request);
     }
 
     /**
