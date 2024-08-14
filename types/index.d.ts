@@ -1015,4 +1015,16 @@ export declare class TmDBApi {
      * Validate the API key.
      */
     validateKey(): Promise<AuthenticatedOptions>;
+
+    /**
+     * Update the API key.
+     * @param apiKey - The new API key
+     */
+    public updateApiKey(apiKey: string): void;
+
+    /**
+     * Update the fetch function.
+     * @param fetch - The new fetch function
+     */
+    public updateFetch(fetch: FetchType): void;
 }

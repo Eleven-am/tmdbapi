@@ -30,9 +30,9 @@ import {
 import {createDates, groupByLength} from "./helpers";
 
 export class TmDBApi {
-    private readonly _apiKey: string;
+    private _apiKey: string;
     private readonly _baseUrl: string;
-    private readonly _fetch: FetchType | undefined;
+    private _fetch: FetchType | undefined;
 
     /**
      * Creates an instance of TmDBApi.
@@ -566,6 +566,22 @@ export class TmDBApi {
         }
 
         return makeRequest<AuthenticatedOptions>(request);
+    }
+
+    /**
+     * Update the API key.
+     * @param apiKey - The new API key
+     */
+    public updateApiKey(apiKey: string) {
+        this._apiKey = apiKey;
+    }
+
+    /**
+     * Update the fetch function.
+     * @param fetch - The new fetch function
+     */
+    public updateFetch(fetch: FetchType) {
+        this._fetch = fetch;
     }
 
     private _getAppendToResponse(options?: AppendToMovie | AppendToShow | AppendToPerson): string[] | undefined {
