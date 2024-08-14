@@ -123,6 +123,12 @@ class TmDBApi {
             return Object.assign({}, newShow);
         });
     }
+    /**
+     * Get a Media by id.
+     * @param id - The media id
+     * @param library - The library type
+     * @param options - The options to use for the request includes the append_to_response and language (optional)
+     */
     getMedia(id, library, options) {
         return __awaiter(this, void 0, void 0, function* () {
             switch (library) {
@@ -491,6 +497,24 @@ class TmDBApi {
             const data = yield (0, request_1.makeRequest)(request);
             return this._getDateObject(data);
         });
+    }
+    /**
+     * Find media by external id.
+     * @param option - The options to use for the request includes the external_id, external_source and language (optional)
+     */
+    findMedia(option) {
+        const params = {
+            api_key: this._apiKey,
+            external_source: option.external_source,
+            language: option.language,
+        };
+        const request = {
+            method: 'GET',
+            address: `${this._baseUrl}/find/${option.external_id}`,
+            query: params,
+            fetch: this._fetch
+        };
+        return (0, request_1.makeRequest)(request);
     }
     /**
      * Validate the API key.

@@ -6,6 +6,15 @@ type ReplaceWhenTruthy<FirstObject, SecondObject> = Pick<SecondObject, {
     [Prop in keyof FirstObject]: Prop extends keyof SecondObject ? FirstObject[Prop] extends false | null | undefined | '' ? never : Prop : never
 }[keyof FirstObject]>;
 
+export enum FindExternalSource {
+    IMDB = 'imdb_id',
+    TVDB = 'tvdb_id',
+    TVRAGE = 'tvrage_id',
+    FACEBOOK = 'facebook_id',
+    INSTAGRAM = 'instagram_id',
+    TWITTER = 'twitter_id',
+}
+
 export interface AppendToMovie {
     videos?: boolean;
     credits?: boolean;
@@ -729,6 +738,12 @@ export interface AiringShowsOptions {
     time_window?: 'airing_today' | 'on_the_air';
 }
 
+export interface FindMediaOptions {
+    external_id: string;
+    language?: string;
+    external_source: FindExternalSource;
+}
+
 export interface KeywordOptions<Type extends LibraryType> {
     language?: string;
     page?: number;
@@ -1010,6 +1025,12 @@ export declare class TmDBApi {
      * @param options - The options to use for the request includes the library_type, language, page, region, sort_by, certification_country, certification, certification_lte, certification_gte, include_adult, include_video, primary_release_year, primary_release_date_gte, primary_release_date_lte, release_date_gte, release_date_lte, with_release_type, year, vote_count_gte, vote_count_lte, vote_average_gte, vote_average_lte, with_cast, with_crew, with_people, with_companies, with_genres, without_genres
      */
     discoverMedia<Library extends LibraryType>(options?: DiscoverOptions<Library>): Promise<Discover<Library>>;
+
+    /**
+     * Find media by external id.
+     * @param option - The options to use for the request includes the external_id, external_source and language (optional)
+     */
+    findMedia(option: FindMediaOptions): Promise<MiniMovie | MiniTVShow | MiniPerson>;
 
     /**
      * Validate the API key.

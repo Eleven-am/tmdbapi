@@ -9,8 +9,8 @@ import {
     Collection,
     Company, Discover, DiscoverOptions,
     Episode,
-    EpisodeOptions, KeywordOptions, KeywordResult,
-    LibraryType, Media, MediaOptions,
+    EpisodeOptions, FindMediaOptions, KeywordOptions, KeywordResult,
+    LibraryType, Media, MediaOptions, MiniMovie, MiniPerson, MiniTVShow,
     Movie,
     MovieOptions,
     NowPlayingMovies,
@@ -165,6 +165,12 @@ export class TmDBApi {
         }
     }
 
+    /**
+     * Get a Media by id.
+     * @param id - The media id
+     * @param library - The library type
+     * @param options - The options to use for the request includes the append_to_response and language (optional)
+     */
     public async getMedia<Library extends LibraryType, Append extends AppendToMedia<Library>>(id: number, library: Library, options?: MediaOptions<Library, Append>): Promise<Media<Library, Append>> {
         switch (library) {
             case 'MOVIE':
@@ -550,6 +556,27 @@ export class TmDBApi {
 
         const data = await makeRequest<Discover<Library>>(request);
         return this._getDateObject(data);
+    }
+
+    /**
+     * Find media by external id.
+     * @param option - The options to use for the request includes the external_id, external_source and language (optional)
+     */
+    public findMedia(option: FindMediaOptions): Promise<MiniMovie | MiniTVShow | MiniPerson> {
+        const params = {
+            api_key: this._apiKey,
+            external_source: option.external_source,
+            language: option.language,
+        }
+
+        const request: Request = {
+            method: 'GET',
+            address: `${this._baseUrl}/find/${option.external_id}`,
+            query: params,
+            fetch: this._fetch
+        }
+
+        return makeRequest<MiniMovie | MiniTVShow | MiniPerson>(request);
     }
 
     /**
